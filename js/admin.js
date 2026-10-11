@@ -20,6 +20,22 @@ $("btn-logout") && $("btn-logout").addEventListener("click", function(){ session
 
 function showPanel(){ $("admin-login").classList.add("hidden"); $("admin-panel").classList.remove("hidden"); render(); }
 function isPass(r){ return r.status==="Completed" && r.percent >= CONFIG.PASS_PERCENT; }
+function gradeOf(r){
+  if(r.status!=="Completed") return {g:"—", cls:"gx"};
+  const p = r.percent;
+  if(p>=80) return {g:"A+", cls:"ga"};
+  if(p>=70) return {g:"A", cls:"ga"};
+  if(p>=60) return {g:"B", cls:"gb"};
+  if(p>=50) return {g:"C", cls:"gc"};
+  if(p>=40) return {g:"D", cls:"gd"};
+  return {g:"F", cls:"gf"};
+}
+function positionMap(all){
+  const done = all.filter(r=>r.status==="Completed").slice().sort((a,b)=>b.score-a.score);
+  const map = {}; let lastScore=null, lastRank=0;
+  done.forEach(function(r,i){ if(r.score!==lastScore){ lastRank=i+1; lastScore=r.score; } map[r.key+"|"+r.date]=lastRank; });
+  return map;
+}
 
 function render(){
   const q = ($("search").value||"").toLowerCase();
@@ -35,6 +51,7 @@ function render(){
   $("print-date").textContent = "Printed on: " + new Date().toLocaleString("en-GB",{timeZone:"Asia/Karachi"});
   $("print-summary").textContent = "Total Students: " + all.length + "  •  Completed: " + all.filter(r=>r.status==="Completed").length + "  •  Cancelled: " + all.filter(r=>r.status==="Cancelled").length + "  •  Pass: " + all.filter(isPass).length;
 
+  const posMap = positionMap(all);
   currentList = all.filter(r => (!f || r.status===f) && (!q || r.name.toLowerCase().includes(q)));
   const tb = $("results-body"); tb.innerHTML="";
   $("no-results").classList.toggle("hidden", all.length>0);
@@ -43,7 +60,9 @@ function render(){
     const pass = isPass(r);
     tr.innerHTML =
       "<td>"+(i+1)+"</td><td><b>"+esc(r.name)+"</b></td>"+
-      "<td><b>"+r.score+"</b>/"+r.total+"</td><td>"+r.percent+"%</td>"+
+      "<td><b>"+r.score+"</b> / "+r.total+"</td><td><b>"+r.percent+"%</b></td>"+
+      (function(){ const gr=gradeOf(r); return "<td><span class='grade "+gr.cls+"'>"+gr.g+"</span></td>"; })()+
+      (function(){ const p=posMap[r.key+"|"+r.date]; return "<td>"+(p? "<span class='pos "+(p===1?"p1":p===2?"p2":p===3?"p3":"")+"'>"+p+"</span>" : "—")+"</td>"; })()+
       "<td>"+(r.status==="Cancelled" ? "<span style='color:var(--red);font-weight:800'>CANCELLED</span>" : (pass ? "<span style='color:var(--green);font-weight:800'>PASS</span>" : "<span style='color:var(--red);font-weight:800'>FAIL</span>"))+"</td>"+
       "<td><span class='badge "+(r.status==="Completed"?"ok":"cancel")+"'>"+esc(r.status)+"</span>"+(r.reason && r.status==="Cancelled" ? "<div style='font-size:11px;color:var(--muted);max-width:170px'>"+esc(r.reason)+"</div>" : "")+"</td>"+
       "<td>"+r.answered+"</td><td>"+esc(r.timeUsed||"-")+"</td><td style='white-space:nowrap'>"+esc(r.date)+"</td>"+
@@ -88,9 +107,9 @@ $("btn-pdf-all").addEventListener("click", function(){
 $("btn-csv").addEventListener("click", function(){
   const all = getResults();
   if(!all.length){ alert("Export ke liye koi result nahi hai."); return; }
-  let csv = "No,Student Name,Score,Total,Percent,Result,Status,Reason,Answered,Time Used,Date\n";
+  let csv = "S.No,Student Name,Marks Obtained,Total Marks,Percent,Grade,Position,Result,Status,Reason,Answered,Time Used,Date\n";
   all.forEach(function(r,i){
-    const vals=[i+1,r.name,r.score,r.total,r.percent+"%",(r.status==="Cancelled"?"CANCELLED":(isPass(r)?"PASS":"FAIL")),r.status,(r.reason||""),r.answered,(r.timeUsed||""),r.date];
+    const posMap2=positionMap(all); const vals=[i+1,r.name,r.score,r.total,r.percent+"%",gradeOf(r).g,(posMap2[r.key+"|"+r.date]||"-"),(r.status==="Cancelled"?"CANCELLED":(isPass(r)?"PASS":"FAIL")),r.status,(r.reason||""),r.answered,(r.timeUsed||""),r.date];
     csv += vals.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(",")+"\n";
   });
   const a=document.createElement("a");
