@@ -61,11 +61,11 @@ function render(){
     tr.innerHTML =
       "<td>"+(i+1)+"</td><td><b>"+esc(r.name)+"</b></td>"+
       "<td><b>"+r.score+"</b> / "+r.total+"</td><td><b>"+r.percent+"%</b></td>"+
-      (function(){ const gr=gradeOf(r); return "<td><span class='grade "+gr.cls+"'>"+gr.g+"</span></td>"; })()+
-      (function(){ const p=posMap[r.key+"|"+r.date]; return "<td>"+(p? "<span class='pos "+(p===1?"p1":p===2?"p2":p===3?"p3":"")+"'>"+p+"</span>" : "—")+"</td>"; })()+
-      "<td>"+(r.status==="Cancelled" ? "<span style='color:var(--red);font-weight:800'>CANCELLED</span>" : (pass ? "<span style='color:var(--green);font-weight:800'>PASS</span>" : "<span style='color:var(--red);font-weight:800'>FAIL</span>"))+"</td>"+
-      "<td><span class='badge "+(r.status==="Completed"?"ok":"cancel")+"'>"+esc(r.status)+"</span>"+(r.reason && r.status==="Cancelled" ? "<div style='font-size:11px;color:var(--muted);max-width:170px'>"+esc(r.reason)+"</div>" : "")+"</td>"+
-      "<td>"+r.answered+"</td><td>"+esc(r.timeUsed||"-")+"</td><td style='white-space:nowrap'>"+esc(r.date)+"</td>"+
+      (function(){ const gr=gradeOf(r); return "<td class='print-hide'><span class='grade "+gr.cls+"'>"+gr.g+"</span></td>"; })()+
+      (function(){ const p=posMap[r.key+"|"+r.date]; return "<td class='print-hide'>"+(p? "<span class='pos "+(p===1?"p1":p===2?"p2":p===3?"p3":"")+"'>"+p+"</span>" : "—")+"</td>"; })()+
+      "<td class='print-hide'>"+(r.status==="Cancelled" ? "<span style='color:var(--red);font-weight:800'>CANCELLED</span>" : (pass ? "<span style='color:var(--green);font-weight:800'>PASS</span>" : "<span style='color:var(--red);font-weight:800'>FAIL</span>"))+"</td>"+
+      "<td class='print-hide'><span class='badge "+(r.status==="Completed"?"ok":"cancel")+"'>"+esc(r.status)+"</span>"+(r.reason && r.status==="Cancelled" ? "<div style='font-size:11px;color:var(--muted);max-width:170px'>"+esc(r.reason)+"</div>" : "")+"</td>"+
+      "<td class='print-hide'>"+r.answered+"</td><td class='print-hide'>"+esc(r.timeUsed||"-")+"</td><td class='print-hide' style='white-space:nowrap'>"+esc(r.date)+"</td>"+
       "<td class='no-print' style='white-space:nowrap'>"+
         "<button class='btn small red' data-act='del' data-i='"+i+"' title='Delete - student dobara test de sakega'>🗑 Delete</button>"+
       "</td>";
