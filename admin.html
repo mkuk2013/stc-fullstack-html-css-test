@@ -5,64 +5,68 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Panel - Full Stack Web Development Test (HTML + CSS) - STC Umerkot</title>
 <link rel="icon" href="assets/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
-<style>
-.slip{max-width:720px;margin:0 auto}
-.slip-head{text-align:center;border-bottom:3px double var(--navy);padding-bottom:12px;margin-bottom:14px}
-.slip-head img{width:86px;height:86px;object-fit:contain}
-.slip table td{border:1px solid #c9d9e8;padding:9px 12px;font-size:15px}
-.slip table td:first-child{background:#eaf3fc;font-weight:800;width:42%}
-@media print{ body *{visibility:hidden} #print-area, #print-area *{visibility:visible} #print-area{position:absolute;left:0;top:0;width:100%} }
-</style>
 </head>
 <body>
-<header class="topbar no-print">
-  <img src="assets/logo.png" alt="STC Logo">
-  <div>
-    <div class="t1">Admin Panel - Super Sys-Tech Computers Centre, Umerkot</div>
-    <div class="t2">Full Stack Web Development Test (HTML + CSS) &bull; Results Management</div>
-  </div>
-  <div class="spacer"></div>
-  <a class="admin-link" href="index.html">Student Test Page</a>
-</header>
 
-<div class="wrap">
+<div class="gov-strip">Regd. with <b>NAVTTC</b> Islamabad &nbsp;•&nbsp; Affiliated with <b>STEVTA</b>, <b>SBTE</b> &amp; <b>TTB</b> Sindh &nbsp;•&nbsp; Since <b>1997</b></div>
+
+<nav class="navbar no-print">
+  <div class="inner">
+    <a class="brand" href="index.html">
+      <img src="assets/logo.png" alt="STC Logo">
+      <span><span class="b1">Super Sys-Tech Computers Centre</span><br><span class="b2">ADMIN PANEL • UMERKOT</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Student Test Page</a>
+      <a class="nav-admin" href="#panel-top">Results Dashboard</a>
+    </div>
+  </div>
+</nav>
+
+<div class="admin-shell" id="panel-top">
+
   <!-- LOGIN -->
-  <section id="admin-login" class="card" style="max-width:440px;margin:26px auto">
-    <div style="text-align:center"><img src="assets/logo.png" style="width:88px;height:88px;object-fit:contain" alt="STC"></div>
-    <h2 style="text-align:center;color:var(--navy);margin:10px 0 4px">Admin Login</h2>
-    <p style="text-align:center;color:var(--muted);font-size:13.5px">Sirf institute admin ke liye</p>
+  <section id="admin-login" class="login-card">
+    <div style="text-align:center">
+      <img src="assets/logo.png" style="width:92px;height:92px;object-fit:contain" alt="STC">
+      <h2 style="color:var(--navy);margin:12px 0 4px;font-size:23px">Admin Login</h2>
+      <p style="color:var(--muted);font-size:13.5px">Full Stack Web Development Test (HTML + CSS)<br>Sirf institute admin / teacher ke liye</p>
+    </div>
     <form id="login-form">
-      <div class="field"><label>Admin Password</label>
+      <div class="field"><label for="admin-pass">Admin Password</label>
       <input type="password" id="admin-pass" placeholder="Password likhein" required></div>
-      <button class="btn" type="submit">Login</button>
+      <button class="btn" type="submit">🔐 &nbsp;Login to Dashboard</button>
       <div class="err" id="login-err"></div>
     </form>
+    <p class="secure-note">Ye panel usi browser/device par khulega jahan students ne test diya ho.</p>
   </section>
 
   <!-- PANEL -->
   <section id="admin-panel" class="hidden">
     <div id="print-area">
-      <div class="card">
-        <div style="text-align:center;margin-bottom:6px">
-          <img src="assets/logo.png" style="width:64px;height:64px;object-fit:contain" alt="STC">
-          <h2 style="color:var(--navy)">Super Sys-Tech Computers Centre, Umerkot</h2>
-          <p style="font-weight:800">Full Stack Web Development Test (HTML + CSS) - Results Sheet</p>
-          <p style="color:var(--muted);font-size:13px" id="print-date"></p>
-        </div>
+      <div style="text-align:center;margin-bottom:4px">
+        <img src="assets/logo.png" style="width:64px;height:64px;object-fit:contain" alt="STC">
+        <h2 style="color:var(--navy);font-size:24px">Super Sys-Tech Computers Centre, Umerkot</h2>
+        <p style="font-weight:800;font-family:Poppins">Full Stack Web Development Test (HTML + CSS) — Results Dashboard</p>
+        <p style="color:var(--muted);font-size:13px" id="print-date"></p>
+      </div>
 
-        <div class="stats-row no-print-screen" id="stats-row">
-          <div class="stat"><b id="st-total">0</b><span>Total Attempts</span></div>
-          <div class="stat"><b id="st-completed">0</b><span>Completed</span></div>
-          <div class="stat"><b id="st-cancelled">0</b><span>Cancelled</span></div>
-          <div class="stat"><b id="st-pass">0</b><span>Pass</span></div>
-          <div class="stat"><b id="st-avg">0%</b><span>Average</span></div>
-          <div class="stat"><b id="st-high">0</b><span>Highest Score</span></div>
-        </div>
+      <div class="kpi-grid no-print">
+        <div class="kpi navy"><b id="st-total">0</b><span>Total Attempts</span></div>
+        <div class="kpi blue"><b id="st-completed">0</b><span>Completed</span></div>
+        <div class="kpi red"><b id="st-cancelled">0</b><span>Cancelled</span></div>
+        <div class="kpi green"><b id="st-pass">0</b><span>Students Pass</span></div>
+        <div class="kpi gold"><b id="st-avg">0%</b><span>Average Score</span></div>
+        <div class="kpi purple"><b id="st-high">0</b><span>Highest Score</span></div>
+      </div>
 
+      <div class="panel-card">
         <div class="toolbar no-print">
-          <input type="text" id="search" placeholder="🔍 Name ya Roll se search karein..." style="flex:1;min-width:180px">
-          <select id="filter-status">
+          <input type="text" id="search" placeholder="🔍 Student ke naam se search karein..." style="flex:1;min-width:190px">
+          <select id="filter-status" style="width:auto">
             <option value="">All Status</option>
             <option>Completed</option>
             <option>Cancelled</option>
@@ -73,25 +77,27 @@
           <button class="btn small red" id="btn-clear" type="button">🗑 Clear All</button>
           <button class="btn small ghost" id="btn-logout" type="button">Logout</button>
         </div>
-        <p class="no-print" style="font-size:13px;color:var(--muted)">💡 <b>PDF:</b> "PDF Download" dabane par print window khulega - wahan Destination mein <b>"Save as PDF"</b> select karke save karein. Har student ki alag <b>Result Slip</b> ke liye us ki row mein 🖨 / PDF button hai.<br>🗑 Kisi ek student ka record delete karne se wo student dobara test de sakta hai (retake allow karne ke liye).</p>
+        <p class="no-print" style="font-size:13px;color:var(--muted);line-height:1.6">💡 <b>PDF:</b> "PDF Download" dabane par print window khulega — wahan Destination mein <b>"Save as PDF"</b> select karke save karein. Har student ki alag <b>Result Slip</b> (print / PDF) us ki row ke 🖨 Slip / ⬇ PDF button se milegi.<br>🗑 Ek student ka record delete karne se wo student <b>dobara test</b> de sakta hai (retake sirf admin allow kar sakta hai).</p>
 
-        <div style="overflow-x:auto;margin-top:12px">
+        <div class="tbl-wrap" style="margin-top:14px">
         <table id="results-table">
           <thead><tr>
-            <th>#</th><th>Student Name</th><th>Roll</th><th>Score</th><th>%</th><th>Result</th><th>Status</th><th>Answered</th><th>Time Used</th><th>Date / Time</th><th class="no-print">Actions</th>
+            <th>#</th><th>Student Name</th><th>Score</th><th>%</th><th>Result</th><th>Status</th><th>Answered</th><th>Time Used</th><th>Date / Time</th><th class="no-print">Actions</th>
           </tr></thead>
           <tbody id="results-body"></tbody>
         </table>
         </div>
-        <p id="no-results" style="text-align:center;color:var(--muted);padding:22px" class="hidden">Abhi tak kisi student ne test nahi diya. Results yahan isi browser/device par nazar ayenge jahan students ne test diya ho.</p>
+        <p id="no-results" style="text-align:center;color:var(--muted);padding:26px" class="hidden">Abhi tak kisi student ne test nahi diya.<br><span style="font-size:13px">Results yahan usi browser/device par nazar ayenge jahan students ne test diya ho.</span></p>
       </div>
     </div>
 
-    <!-- SLIP PRINT AREA (single student) -->
     <div id="slip-area" class="hidden"></div>
   </section>
 </div>
-<div class="footer no-print">Super Sys-Tech Computers Centre, Umerkot &bull; Admin Panel</div>
+
+<footer class="no-print">
+  <div class="copyright" style="border:none">© 2026 Super Sys-Tech Computers Centre, 1st Floor Jameel Market, Umerkot • 0332-3350790 | 0345-3279790 • Admin Panel</div>
+</footer>
 
 <script src="js/config.js"></script>
 <script src="js/admin.js"></script>
