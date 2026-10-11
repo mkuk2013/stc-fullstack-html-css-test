@@ -3,9 +3,9 @@
 "use strict";
 const $ = id => document.getElementById(id);
 const norm = s => (s||"").trim().toLowerCase().replace(/\s+/g," ");
-const studentKey = (name, roll) => norm(name) + "|" + norm(roll);
+const studentKey = (name) => norm(name);
 
-let state = null; // {name, roll, questions:[], answers:{qid:idx}, current, startedAt, left, timerId, finished}
+let state = null; // {name, questions:[], answers:{qid:idx}, current, startedAt, left, timerId, finished}
 
 function getResults(){ try { return JSON.parse(localStorage.getItem(CONFIG.RESULTS_KEY)) || []; } catch(e){ return []; } }
 function saveResults(r){ localStorage.setItem(CONFIG.RESULTS_KEY, JSON.stringify(r)); }
@@ -18,24 +18,22 @@ function show(view){ ["view-home","view-test","view-result","view-cancelled"].fo
 $("entry-form").addEventListener("submit", function(e){
   e.preventDefault();
   const name = $("student-name").value.trim();
-  const roll = $("student-roll").value.trim();
   const err = $("entry-err"); err.style.display="none";
   if(name.length < 3){ err.textContent = "Please enter your full name."; err.style.display="block"; return; }
-  if(!roll){ err.textContent = "Please enter your Roll No / Seat No."; err.style.display="block"; return; }
 
-  const key = studentKey(name, roll);
+  const key = studentKey(name);
   const prev = getResults().find(r => r.key === key);
   if(prev){
-    err.innerHTML = "⛔ <b>" + name + "</b> (Roll: " + roll + ") pehle hi test de chuka hai - Status: <b>" + prev.status + "</b>, Score: <b>" + prev.score + "/100</b> (" + prev.date + ").<br>One-time policy: dobara attempt allowed nahi. Masla ho to admin se rabta karein.";
+    err.innerHTML = "⛔ <b>" + name + "</b> pehle hi test de chuka hai - Status: <b>" + prev.status + "</b>, Score: <b>" + prev.score + "/100</b> (" + prev.date + ").<br>One-time policy: dobara attempt allowed nahi. Masla ho to admin se rabta karein.";
     err.style.display="block"; return;
   }
   if(!confirm("Test start karne ja rahe hain?\n\n• 100 MCQs, 100 Minutes\n• Tab/page change ya close = TEST CANCEL\n• Ye sirf EK dafa diya ja sakta hai\n\nOK dabayein to test FULL SCREEN mein start hoga.")) return;
-  startTest(name, roll, key);
+  startTest(name, key);
 });
 
-function startTest(name, roll, key){
+function startTest(name, key){
   state = {
-    name, roll, key,
+    name, key,
     questions: shuffle(QUESTIONS),
     answers: {},
     current: 0,
@@ -45,8 +43,8 @@ function startTest(name, roll, key){
     fsEntered: false
   };
   // Active flag: page close/refresh par cancel record karne ke liye
-  localStorage.setItem(CONFIG.ACTIVE_KEY, JSON.stringify({key, name, roll, startedAt: state.startedAt}));
-  $("th-name").textContent = name; $("th-roll").textContent = roll;
+  localStorage.setItem(CONFIG.ACTIVE_KEY, JSON.stringify({key, name, startedAt: state.startedAt}));
+  $("th-name").textContent = name;
   show("view-test");
   renderQuestion(); buildPalette(); updateProgress(); updateTimerText();
   // Fullscreen
@@ -119,7 +117,7 @@ function persistResult(status, reason){
   const correct = scoreNow();
   const usedSec = CONFIG.DURATION_MINUTES*60 - state.left;
   const rec = {
-    key: state.key, name: state.name, roll: state.roll,
+    key: state.key, name: state.name,
     score: correct, total: state.questions.length, correct: correct,
     wrong: answeredCount()-correct, answered: answeredCount(),
     percent: Math.round(correct/state.questions.length*100),
@@ -144,7 +142,6 @@ function finishTest(status, reason){
   $("res-percent").textContent = rec.percent + "%";
   $("res-correct").textContent = rec.correct;
   $("res-name").textContent = rec.name;
-  $("res-roll").textContent = rec.roll;
   $("res-time").textContent = rec.timeUsed;
   const pass = rec.percent >= CONFIG.PASS_PERCENT;
   $("score-circle").classList.toggle("fail", !pass);
@@ -156,7 +153,7 @@ function cancelTest(reason){
   const rec = persistResult("Cancelled", reason);
   cleanup();
   $("cancel-reason").textContent = "Reason: " + reason;
-  $("cx-name").textContent = rec.name; $("cx-roll").textContent = rec.roll; $("cx-answered").textContent = rec.answered;
+  $("cx-name").textContent = rec.name; $("cx-answered").textContent = rec.answered;
   show("view-cancelled");
 }
 
