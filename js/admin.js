@@ -13,7 +13,7 @@ $("login-form").addEventListener("submit", function(e){
   if($("admin-pass").value === CONFIG.ADMIN_PASSWORD){
     sessionStorage.setItem("stc_admin","1"); showPanel();
   } else {
-    const er=$("login-err"); er.textContent="⛔ Ghalat password. Dobara koshish karein."; er.style.display="block";
+    const er=$("login-err"); er.textContent="⛔ Incorrect password. Please try again."; er.style.display="block";
   }
 });
 $("btn-logout") && $("btn-logout").addEventListener("click", function(){ sessionStorage.removeItem("stc_admin"); location.reload(); });
@@ -67,7 +67,7 @@ function render(){
       "<td class='print-hide'><span class='badge "+(r.status==="Completed"?"ok":"cancel")+"'>"+esc(r.status)+"</span>"+(r.reason && r.status==="Cancelled" ? "<div style='font-size:11px;color:var(--muted);max-width:170px'>"+esc(r.reason)+"</div>" : "")+"</td>"+
       "<td class='print-hide'>"+r.answered+"</td><td class='print-hide'>"+esc(r.timeUsed||"-")+"</td><td class='print-hide' style='white-space:nowrap'>"+esc(r.date)+"</td>"+
       "<td class='no-print' style='white-space:nowrap'>"+
-        "<button class='btn small red' data-act='del' data-i='"+i+"' title='Delete - student dobara test de sakega'>🗑 Delete</button>"+
+        "<button class='btn small red' data-act='del' data-i='"+i+"' title='Delete - the student can then retake the test'>🗑 Delete</button>"+
       "</td>";
     tb.appendChild(tr);
   });
@@ -83,15 +83,15 @@ $("filter-status").addEventListener("change", render);
 
 // Delete one (retake allow)
 function delRecord(r){
-  if(!confirm("'" + r.name + "' ka result DELETE karein?\nIs ke baad ye student DOBARA test de sakega.")) return;
+  if(!confirm("Delete the result of '" + r.name + "'?\nAfter this, the student will be able to take the test AGAIN.")) return;
   saveResults(getResults().filter(x => !(x.key===r.key && x.date===r.date)));
   render();
 }
 // Clear all
 $("btn-clear").addEventListener("click", function(){
   if(!getResults().length) return;
-  if(!confirm("SAB results delete kar dein? Ye wapas nahi ayenge.\nPehle CSV/PDF save kar lena behtar hai.")) return;
-  if(!confirm("Pakka? TAMAM students ke records delete ho jayenge.")) return;
+  if(!confirm("Delete ALL results? They cannot be recovered.\nIt is better to save the CSV/PDF first.")) return;
+  if(!confirm("Are you sure? ALL student records will be deleted.")) return;
   saveResults([]); render();
 });
 
@@ -99,14 +99,14 @@ $("btn-clear").addEventListener("click", function(){
 function printAll(){ render(); setTimeout(function(){ window.print(); }, 60); }
 $("btn-print-all").addEventListener("click", printAll);
 $("btn-pdf-all").addEventListener("click", function(){
-  alert("EK HI PDF bane gi jisme SAB students ke naam honge.\nPrint window mein Destination / Printer mein 'Save as PDF' select karein, phir Save dabayein.");
+  alert("One single PDF will be created containing ALL students.\nIn the print window, select 'Save as PDF' as the Destination / Printer, then press Save.");
   printAll();
 });
 
 // CSV / Excel export
 $("btn-csv").addEventListener("click", function(){
   const all = getResults();
-  if(!all.length){ alert("Export ke liye koi result nahi hai."); return; }
+  if(!all.length){ alert("There are no results to export."); return; }
   let csv = "S.No,Student Name,Marks Obtained,Total Marks,Percent,Grade,Position,Result,Status,Reason,Answered,Time Used,Date\n";
   all.forEach(function(r,i){
     const posMap2=positionMap(all); const vals=[i+1,r.name,r.score,r.total,r.percent+"%",gradeOf(r).g,(posMap2[r.key+"|"+r.date]||"-"),(r.status==="Cancelled"?"CANCELLED":(isPass(r)?"PASS":"FAIL")),r.status,(r.reason||""),r.answered,(r.timeUsed||""),r.date];
