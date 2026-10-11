@@ -209,6 +209,7 @@ tr:hover td{background:#eef5fd}
 @media(max-width:560px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.palette{grid-template-columns:repeat(5,1fr)}.hero-grid h1{font-size:26px}.q-text{font-size:17px}}
 
 .print-sign{display:none}
+#student-print-area{display:none}
 .sheet-head{border:2px solid var(--navy);border-radius:16px;padding:18px 20px 14px;margin-bottom:16px;background:linear-gradient(180deg,#f7fbff,#fff)}
 .sheet-head-top{display:flex;align-items:center;gap:16px}
 .sheet-head-top img{width:72px;height:72px;object-fit:contain}
@@ -229,7 +230,8 @@ tr:hover td{background:#eef5fd}
 @media print{
   body{background:#fff}
   .print-hide{display:none!important}
-  .navbar,.gov-strip,footer,.toolbar,.no-print{display:none!important}
+  .navbar,.gov-strip,footer,.toolbar,.no-print,#view-home,#view-test,#view-result,#view-cancelled{display:none!important}
+  #student-print-area{display:block!important}
   .admin-shell,.test-shell{max-width:100%;padding:0}
   .panel-card,.result-card{box-shadow:none;border:none;padding:4px}
   .kpi{color:#000;background:#eee!important;-webkit-print-color-adjust:exact}
