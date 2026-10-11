@@ -1,5 +1,5 @@
 // ===== Super Sys-Tech Computers Centre Umerkot - Test Configuration =====
-// Admin password yahan se change kar sakte hain
+// The admin password can be changed here
 const CONFIG = {
   INSTITUTE: "Super Sys-Tech Computers Centre",
   CITY: "Umerkot",
