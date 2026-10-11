@@ -101,6 +101,13 @@ function updateProgress(){ const c=answeredCount(); $("th-answered").textContent
 
 $("btn-prev").addEventListener("click", function(){ if(state.current>0){ state.current--; renderQuestion(); }});
 $("btn-next").addEventListener("click", function(){ if(state.current<state.questions.length-1){ state.current++; renderQuestion(); }});
+$("btn-my-pdf").addEventListener("click", function(){
+  if(!lastResult){ alert("Result abhi available nahi hai."); return; }
+  buildStudentSlip();
+  const oldTitle = document.title;
+  document.title = "Result - " + lastResult.name + " - STC Umerkot";
+  setTimeout(function(){ window.print(); setTimeout(function(){ document.title = oldTitle; }, 400); }, 60);
+});
 $("btn-submit").addEventListener("click", function(){
   const un = state.questions.length - answeredCount();
   const msg = un>0 ? ("Abhi " + un + " sawal jawab ke baghair hain.\nPhir bhi Final Submit karein?") : "Final Submit karein? Is ke baad koi change nahi ho sakta.";
@@ -134,9 +141,33 @@ function cleanup(){
   if(state.timerId) clearInterval(state.timerId);
   if(document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(()=>{});
 }
+let lastResult = null;
+function escHtml(s){ return String(s==null?"":s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+function gradeStr(p){ if(p>=80) return "A+"; if(p>=70) return "A"; if(p>=60) return "B"; if(p>=50) return "C"; if(p>=40) return "D"; return "F"; }
+function buildStudentSlip(){
+  const rec = lastResult; if(!rec) return;
+  const pass = rec.percent >= CONFIG.PASS_PERCENT;
+  document.getElementById("student-print-area").innerHTML =
+  "<div class='slip' style='background:#fff;padding:10px'>" +
+    "<div class='slip-head'><img src='assets/logo.png'><h2 style='color:var(--navy)'>Super Sys-Tech Computers Centre, Umerkot</h2>" +
+    "<div style='font-size:12.5px;color:#5b7186'>1st Floor, Jameel Market, Umerkot &bull; 0332-3350790 | 0345-3279790 &bull; stc.edu.pk</div>" +
+    "<h3 style='margin-top:10px;letter-spacing:2px'>RESULT SLIP</h3><div style='font-weight:700'>Full Stack Web Development Test (HTML + CSS)</div></div>" +
+    "<table><tbody>" +
+    "<tr><td>Student Name</td><td><b>" + escHtml(rec.name) + "</b></td></tr>" +
+    "<tr><td>Marks Obtained</td><td><b>" + rec.score + " / " + rec.total + "</b></td></tr>" +
+    "<tr><td>Percentage</td><td><b>" + rec.percent + "%</b></td></tr>" +
+    "<tr><td>Grade</td><td><b>" + gradeStr(rec.percent) + "</b></td></tr>" +
+    "<tr><td>Result</td><td><b style='font-size:17px;color:" + (pass ? "#0b7a55" : "#d92d20") + "'>" + (pass ? "PASS" : "FAIL") + "</b></td></tr>" +
+    "<tr><td>Date / Time</td><td>" + escHtml(rec.date) + "</td></tr>" +
+    "</tbody></table>" +
+    "<div style='display:flex;justify-content:flex-end;margin-top:36px'><div style='text-align:center;font-size:12.5px;font-weight:700;color:#0a2540'><img src='assets/instructor-sign.png' style='display:block;height:32px;max-width:180px;object-fit:contain;margin:0 auto 2px'><div style='border-bottom:1.6px solid #0a2540;width:200px;margin:0 auto 5px;height:6px'></div>Instructor Signature</div></div>" +
+    "<p style='text-align:center;color:#5b7186;font-size:11.5px;margin-top:22px'>Computer generated result slip - Super Sys-Tech Computers Centre, Umerkot (Since 1997)</p>" +
+  "</div>";
+}
 function finishTest(status, reason){
   if(!state || state.finished) return;
   const rec = persistResult(status, reason);
+  lastResult = rec;
   cleanup();
   $("res-score").textContent = rec.score;
   $("res-percent").textContent = rec.percent + "%";
