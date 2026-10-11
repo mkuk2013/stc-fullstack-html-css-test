@@ -52,6 +52,7 @@
         <h2 style="color:var(--navy);font-size:24px">Super Sys-Tech Computers Centre, Umerkot</h2>
         <p style="font-weight:800;font-family:Poppins">Full Stack Web Development Test (HTML + CSS) — Results Dashboard</p>
         <p style="color:var(--muted);font-size:13px" id="print-date"></p>
+        <p style="font-weight:700;font-size:13.5px" id="print-summary"></p>
       </div>
 
       <div class="kpi-grid no-print">
@@ -71,13 +72,13 @@
             <option>Completed</option>
             <option>Cancelled</option>
           </select>
-          <button class="btn small" id="btn-print-all" type="button">🖨 Print All Results</button>
-          <button class="btn small green" id="btn-pdf-all" type="button">⬇ PDF Download (All)</button>
+          <button class="btn small green" id="btn-pdf-all" type="button">⬇ Ek Hi PDF Download — Sab Students</button>
+          <button class="btn small" id="btn-print-all" type="button">🖨 Print Result Sheet</button>
           <button class="btn small ghost" id="btn-csv" type="button">⬇ CSV / Excel</button>
           <button class="btn small red" id="btn-clear" type="button">🗑 Clear All</button>
           <button class="btn small ghost" id="btn-logout" type="button">Logout</button>
         </div>
-        <p class="no-print" style="font-size:13px;color:var(--muted);line-height:1.6">💡 <b>PDF:</b> "PDF Download" dabane par print window khulega — wahan Destination mein <b>"Save as PDF"</b> select karke save karein. Har student ki alag <b>Result Slip</b> (print / PDF) us ki row ke 🖨 Slip / ⬇ PDF button se milegi.<br>🗑 Ek student ka record delete karne se wo student <b>dobara test</b> de sakta hai (retake sirf admin allow kar sakta hai).</p>
+        <p class="no-print" style="font-size:13px;color:var(--muted);line-height:1.6">💡 <b>Ek Hi PDF:</b> "Ek Hi PDF Download" dabane par <b>sab students ke naam ek hi Result Sheet</b> mein ayenge — print window mein Destination <b>"Save as PDF"</b> select karke ek hi PDF file save karein. Alag-alag PDF nahi banti.<br>🗑 Ek student ka record delete karne se wo student <b>dobara test</b> de sakta hai (retake sirf admin allow kar sakta hai).</p>
 
         <div class="tbl-wrap" style="margin-top:14px">
         <table id="results-table">
@@ -89,9 +90,9 @@
         </div>
         <p id="no-results" style="text-align:center;color:var(--muted);padding:26px" class="hidden">Abhi tak kisi student ne test nahi diya.<br><span style="font-size:13px">Results yahan usi browser/device par nazar ayenge jahan students ne test diya ho.</span></p>
       </div>
+      <div class="print-sign"><span>Class Teacher Signature: __________________</span><span>Admin / Principal Signature: __________________</span></div>
     </div>
 
-    <div id="slip-area" class="hidden"></div>
   </section>
 </div>
 
