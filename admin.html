@@ -47,12 +47,27 @@
   <!-- PANEL -->
   <section id="admin-panel" class="hidden">
     <div id="print-area">
-      <div style="text-align:center;margin-bottom:4px">
-        <img src="assets/logo.png" style="width:64px;height:64px;object-fit:contain" alt="STC">
-        <h2 style="color:var(--navy);font-size:24px">Super Sys-Tech Computers Centre, Umerkot</h2>
-        <p style="font-weight:800;font-family:Poppins">Full Stack Web Development Test (HTML + CSS) — Results Dashboard</p>
-        <p style="color:var(--muted);font-size:13px" id="print-date"></p>
-        <p style="font-weight:700;font-size:13.5px" id="print-summary"></p>
+      <div class="sheet-head">
+        <div class="sheet-head-top">
+          <img src="assets/logo.png" alt="STC">
+          <div class="sheet-title">
+            <h2>Super Sys-Tech Computers Centre</h2>
+            <div class="sheet-sub">1st Floor, Jameel Market, Umerkot, Sindh &nbsp;•&nbsp; 0332-3350790 | 0345-3279790 &nbsp;•&nbsp; stc.edu.pk</div>
+            <div class="sheet-sub">Regd. NAVTTC Islamabad • Affiliated STEVTA, SBTE &amp; TTB Sindh • Since 1997</div>
+          </div>
+          <img src="assets/logo.png" alt="STC" class="sheet-logo-r">
+        </div>
+        <div class="sheet-band">OFFICIAL RESULT SHEET</div>
+        <div class="sheet-meta">
+          <span><b>Course:</b> Full Stack Web Development</span>
+          <span><b>Test:</b> HTML + CSS</span>
+          <span><b>Total Questions:</b> 100</span>
+          <span><b>Total Marks:</b> 100</span>
+          <span><b>Passing Marks:</b> 40%</span>
+          <span><b>Time Allowed:</b> 100 Minutes</span>
+        </div>
+        <p style="color:var(--muted);font-size:12.5px;margin-top:8px" id="print-date"></p>
+        <p style="font-weight:700;font-size:13.5px;margin-top:2px" id="print-summary"></p>
       </div>
 
       <div class="kpi-grid no-print">
@@ -83,14 +98,14 @@
         <div class="tbl-wrap" style="margin-top:14px">
         <table id="results-table">
           <thead><tr>
-            <th>#</th><th>Student Name</th><th>Score</th><th>%</th><th>Result</th><th>Status</th><th>Answered</th><th>Time Used</th><th>Date / Time</th><th class="no-print">Actions</th>
+            <th>S.No</th><th>Student Name</th><th>Marks</th><th>%</th><th>Grade</th><th>Position</th><th>Result</th><th>Status</th><th>Answered</th><th>Time Used</th><th>Date / Time</th><th class="no-print">Actions</th>
           </tr></thead>
           <tbody id="results-body"></tbody>
         </table>
         </div>
         <p id="no-results" style="text-align:center;color:var(--muted);padding:26px" class="hidden">Abhi tak kisi student ne test nahi diya.<br><span style="font-size:13px">Results yahan usi browser/device par nazar ayenge jahan students ne test diya ho.</span></p>
       </div>
-      <div class="print-sign"><span>Class Teacher Signature: __________________</span><span>Admin / Principal Signature: __________________</span></div>
+      <div class="print-sign"><div class="sign-block"><div class="sign-line"></div><div>Instructor Signature</div></div></div>
     </div>
 
   </section>
