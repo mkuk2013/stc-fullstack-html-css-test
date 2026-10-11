@@ -24,10 +24,10 @@ $("entry-form").addEventListener("submit", function(e){
   const key = studentKey(name);
   const prev = getResults().find(r => r.key === key);
   if(prev){
-    err.innerHTML = "⛔ <b>" + name + "</b> pehle hi test de chuka hai - Status: <b>" + prev.status + "</b>, Score: <b>" + prev.score + "/100</b> (" + prev.date + ").<br>One-time policy: dobara attempt allowed nahi. Masla ho to admin se rabta karein.";
+    err.innerHTML = "⛔ <b>" + name + "</b> has already taken this test - Status: <b>" + prev.status + "</b>, Score: <b>" + prev.score + "/100</b> (" + prev.date + ").<br>One-time policy: a second attempt is not allowed. If there is an issue, please contact the admin.";
     err.style.display="block"; return;
   }
-  if(!confirm("Test start karne ja rahe hain?\n\n• 100 MCQs, 100 Minutes\n• Tab/page change ya close = TEST CANCEL\n• Ye sirf EK dafa diya ja sakta hai\n\nOK dabayein to test FULL SCREEN mein start hoga.")) return;
+  if(!confirm("You are about to start the test.\n\n• 100 MCQs, 100 Minutes\n• Tab/page change or close = TEST CANCELLED\n• This test can be taken ONLY ONCE\n\nPress OK to start the test in FULL SCREEN.")) return;
   startTest(name, key);
 });
 
@@ -102,7 +102,7 @@ function updateProgress(){ const c=answeredCount(); $("th-answered").textContent
 $("btn-prev").addEventListener("click", function(){ if(state.current>0){ state.current--; renderQuestion(); }});
 $("btn-next").addEventListener("click", function(){ if(state.current<state.questions.length-1){ state.current++; renderQuestion(); }});
 $("btn-my-pdf").addEventListener("click", function(){
-  if(!lastResult){ alert("Result abhi available nahi hai."); return; }
+  if(!lastResult){ alert("Result is not available yet."); return; }
   buildStudentSlip();
   const oldTitle = document.title;
   document.title = "Result - " + lastResult.name + " - STC Umerkot";
@@ -113,7 +113,7 @@ $("btn-my-pdf").addEventListener("click", function(){
 });
 $("btn-submit").addEventListener("click", function(){
   const un = state.questions.length - answeredCount();
-  const msg = un>0 ? ("Abhi " + un + " sawal jawab ke baghair hain.\nPhir bhi Final Submit karein?") : "Final Submit karein? Is ke baad koi change nahi ho sakta.";
+  const msg = un>0 ? ("There are still " + un + " unanswered questions.\nSubmit the test anyway?") : "Submit the test finally? No changes can be made afterwards.";
   if(confirm(msg)) finishTest("Completed", "Submitted by Student");
 });
 
@@ -194,21 +194,21 @@ function cancelTest(reason){
 
 // ---------- STRICT MODE ----------
 document.addEventListener("visibilitychange", function(){
-  if(state && !state.finished && document.hidden){ cancelTest("Tab / page change ya browser minimize kiya gaya"); }
+  if(state && !state.finished && document.hidden){ cancelTest("Tab/page changed or browser was minimized"); }
 });
 document.addEventListener("fullscreenchange", function(){
-  if(state && !state.finished && state.fsEntered && !document.fullscreenElement){ cancelTest("Full screen se bahar nikla gaya"); }
+  if(state && !state.finished && state.fsEntered && !document.fullscreenElement){ cancelTest("Exited full-screen mode"); }
 });
 window.addEventListener("blur", function(){
-  // Mobile par notification shade etc. par bhi blur hota hai - visibilitychange hi final check hai.
+  // On mobile, the notification shade etc. can also cause blur - visibilitychange is the reliable final check.
 });
 window.addEventListener("beforeunload", function(e){
   if(state && !state.finished){ e.preventDefault(); e.returnValue = ""; }
 });
 window.addEventListener("pagehide", function(){
   if(state && !state.finished){
-    // Page close ho raha hai - cancel record lazmi save karo (sync localStorage)
-    try { persistResult("Cancelled", "Page / browser close kar diya gaya"); state.finished = true; } catch(e){}
+    // Page is closing - the cancellation record must be saved (synchronous localStorage)
+    try { persistResult("Cancelled", "Page / browser was closed"); state.finished = true; } catch(e){}
   }
 });
 document.addEventListener("contextmenu", function(e){ if(state && !state.finished) e.preventDefault(); });
@@ -220,8 +220,8 @@ document.addEventListener("keydown", function(e){
   if(e.key === "F12") e.preventDefault();
 });
 
-// Agar page reload ke baad active flag reh gaya ho (purana crashed/closed test),
-// wo attempt pehle hi pagehide par Cancelled record ho chuki hoti hai - flag saaf rakho.
+// If the active flag survives a page reload (an old crashed/closed test),
+// that attempt was already recorded as Cancelled on pagehide - just clear the flag.
 (function(){
   const a = localStorage.getItem(CONFIG.ACTIVE_KEY);
   if(a){ localStorage.removeItem(CONFIG.ACTIVE_KEY); }
