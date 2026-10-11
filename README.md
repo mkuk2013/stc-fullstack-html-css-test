@@ -16,8 +16,8 @@
   - Password: `STC@Admin2026` (change in `js/config.js`)
   - Sab students ke results, stats (total, pass, average, highest)
   - Search / filter
-  - **Print All Results** aur **PDF Download** (Print window mein "Save as PDF")
-  - Har student ki alag **Result Slip** print / PDF
+  - **Ek Hi PDF Download** - sab students ke naam EK hi Result Sheet (PDF) mein (Print window mein "Save as PDF"); alag-alag PDF nahi
+  - **Print Result Sheet** - sab ki combined sheet print
   - **CSV / Excel** export
   - Ek student ka record delete karne se wo dobara test de sakta hai
 
