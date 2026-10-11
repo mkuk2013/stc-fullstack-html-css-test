@@ -227,6 +227,7 @@ tr:hover td{background:#eef5fd}
 /* print */
 @media print{
   body{background:#fff}
+  .print-hide{display:none!important}
   .navbar,.gov-strip,footer,.toolbar,.no-print{display:none!important}
   .admin-shell,.test-shell{max-width:100%;padding:0}
   .panel-card,.result-card{box-shadow:none;border:none;padding:4px}
