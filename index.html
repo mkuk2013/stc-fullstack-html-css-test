@@ -4,125 +4,260 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Full Stack Web Development Test (HTML + CSS) - Super Sys-Tech Computers Centre Umerkot</title>
+<meta name="description" content="Official online MCQ test of Super Sys-Tech Computers Centre Umerkot - Full Stack Web Development (HTML + CSS). 100 MCQs, 100 Minutes, Strict One-Time Test.">
 <link rel="icon" href="assets/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<header class="topbar">
-  <img src="assets/logo.png" alt="STC Logo">
-  <div>
-    <div class="t1">Super Sys-Tech Computers Centre</div>
-    <div class="t2">Umerkot &bull; Struggle for Computer Literacy &bull; Since 1997</div>
-  </div>
-  <div class="spacer"></div>
-  <a class="admin-link" href="admin.html">Admin Panel</a>
-</header>
 
-<div class="wrap">
+<div class="gov-strip">Regd. with <b>NAVTTC</b> Islamabad &nbsp;•&nbsp; Affiliated with <b>STEVTA</b>, <b>SBTE</b> &amp; <b>TTB</b> Sindh &nbsp;•&nbsp; Committed to Quality Education Since <b>1997</b></div>
 
-  <!-- ===== HOME / ENTRY ===== -->
-  <section id="view-home" class="card hero">
-    <img src="assets/logo.png" alt="Super Sys-Tech Computers Centre Logo">
-    <h1>Super Sys-Tech Computers Centre, Umerkot</h1>
-    <div><span class="course">Full Stack Web Development Test (HTML + CSS)</span></div>
-    <p class="tag">Online MCQ Test &bull; HTML (Topics 1-9) + CSS (Topics 10-29)</p>
-
-    <div class="stats-row">
-      <div class="stat"><b>100</b><span>Total MCQs</span></div>
-      <div class="stat"><b>100 Min</b><span>Time Allowed</span></div>
-      <div class="stat"><b>100</b><span>Total Marks</span></div>
-      <div class="stat"><b>40%</b><span>Passing Marks</span></div>
+<nav class="navbar">
+  <div class="inner">
+    <a class="brand" href="index.html">
+      <img src="assets/logo.png" alt="STC Logo">
+      <span><span class="b1">Super Sys-Tech Computers Centre</span><br><span class="b2">UMERKOT • STRUGGLE FOR COMPUTER LITERACY</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="#how">How It Works</a>
+      <a href="#syllabus">Syllabus</a>
+      <a href="#rules">Test Rules</a>
+      <a class="nav-admin" href="admin.html">Admin Panel</a>
     </div>
+  </div>
+</nav>
 
-    <div class="rules">
-      <h3>⚠️ STRICT TEST RULES - Dhyan se parhein:</h3>
+<!-- ================= HOME ================= -->
+<div id="view-home">
+  <section class="hero-sec">
+    <div class="hero-grid">
+      <div>
+        <span class="hero-badge">🎓 Official Online Examination Portal</span>
+        <h1>Full Stack Web Development Test <span class="grad">(HTML + CSS)</span></h1>
+        <p class="hero-sub">Super Sys-Tech Computers Centre, Umerkot ka official online MCQ test. Syllabus ke tamam 29 topics se tayyar karda professional exam — bilkul board pattern par.</p>
+        <div class="hero-points">
+          <div><span class="tick">✓</span><span><b>100 MCQs</b> — HTML (Topics 1–9) + CSS (Topics 10–29), har sawal 1 mark</span></div>
+          <div><span class="tick">✓</span><span><b>100 Minutes</b> ka live countdown timer — time khatam par auto-submit</span></div>
+          <div><span class="tick">✓</span><span><b>Strict &amp; One-Time</b> — tab change, page close ya refresh = test cancel</span></div>
+        </div>
+        <div class="hero-stats">
+          <div class="hstat"><b>100</b><span>Total MCQs</span></div>
+          <div class="hstat"><b>100</b><span>Minutes</span></div>
+          <div class="hstat"><b>100</b><span>Total Marks</span></div>
+          <div class="hstat"><b>40%</b><span>Passing</span></div>
+        </div>
+      </div>
+
+      <div class="entry-card" id="start">
+        <div class="ec-head">
+          <img src="assets/logo.png" alt="STC">
+          <div>
+            <h2>Student Entry</h2>
+            <div class="ec-sub">Test start karne se pehle apni details likhein</div>
+          </div>
+        </div>
+        <form id="entry-form" autocomplete="off">
+          <div class="field">
+            <label for="student-name">Student Full Name *</label>
+            <input type="text" id="student-name" placeholder="e.g. Ali Raza" required>
+          </div>
+          <button class="btn" type="submit">▶ &nbsp;Start Test</button>
+          <div class="err" id="entry-err"></div>
+        </form>
+        <p class="secure-note">🔒 Test full-screen secure mode mein hoga. Start karne se pehle neeche diye gaye <b>Test Rules</b> lazmi parh lein.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="how">
+    <div class="container">
+      <div class="sec-head">
+        <div class="kicker">Process</div>
+        <h2>How It Works</h2>
+        <p>Sirf 3 asaan steps — koi registration nahi, koi fees nahi.</p>
+      </div>
+      <div class="grid3">
+        <div class="fcard"><div class="step-num">1</div><h3>Apna Naam Likhein</h3><p>Upar diye gaye form mein apna <b>Full Name</b> durust likhein — yehi naam aap ki result slip par ayega.</p></div>
+        <div class="fcard"><div class="step-num">2</div><h3>Test Attempt Karein</h3><p>100 MCQs ek-ek karke screen par ayenge. Question Palette se kisi bhi sawal par jump kar sakte hain. Upar timer har waqt nazar ayega.</p></div>
+        <div class="fcard"><div class="step-num">3</div><h3>Result Foran Payein</h3><p>Submit karte hi aap ka score, percentage aur PASS / FAIL screen par aa jayega — aur result admin panel mein hamesha ke liye save ho jayega.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="syllabus">
+    <div class="container">
+      <div class="sec-head">
+        <div class="kicker">Course Coverage</div>
+        <h2>Complete Syllabus — 29 Topics</h2>
+        <p>Test bilkul aap ke parhaye gaye syllabus se hai. Har topic se sawal shamil hain.</p>
+      </div>
+      <div class="grid2">
+        <div class="syl-card">
+          <div class="syl-head html"><span>🌐 HTML — Topics 1 to 9</span><span class="count">Part 1</span></div>
+          <ul class="syl-list">
+            <li><span class="no">1</span><span>HTML Structure<small>DOCTYPE, html, head, body, title</small></span></li>
+            <li><span class="no">2</span><span>Content Tags<small>h1–h6, p, br, hr</small></span></li>
+            <li><span class="no">3</span><span>Text Formatting<small>b, i, u, mark, del, sub, sup, small</small></span></li>
+            <li><span class="no">4</span><span>Links &amp; Media<small>a, img, favicon, iframe</small></span></li>
+            <li><span class="no">5</span><span>Lists<small>ul, ol, li</small></span></li>
+            <li><span class="no">6</span><span>Tables<small>table, tr, th, td, colspan, rowspan</small></span></li>
+            <li><span class="no">7</span><span>Layout Elements<small>div, span, block / inline, class, id</small></span></li>
+            <li><span class="no">8</span><span>Forms<small>form, label, input, textarea, select, option, button</small></span></li>
+            <li><span class="no">9</span><span>Input Types<small>text, password, email, date, color, file, radio, checkbox &amp; more</small></span></li>
+          </ul>
+        </div>
+        <div class="syl-card">
+          <div class="syl-head css"><span>🎨 CSS — Topics 10 to 29</span><span class="count">Part 2</span></div>
+          <ul class="syl-list">
+            <li><span class="no">10</span><span>CSS Introduction &amp; Selectors<small>inline, internal, external CSS</small></span></li>
+            <li><span class="no">11</span><span>Colors, Backgrounds &amp; Borders<small>color, background, opacity, border, radius</small></span></li>
+            <li><span class="no">12</span><span>Spacing, Dimensions &amp; Box Model<small>margin, padding, width, height, box-sizing</small></span></li>
+            <li><span class="no">13</span><span>Text, Fonts &amp; Icons<small>alignment, decoration, fonts, Font Awesome</small></span></li>
+            <li><span class="no">14</span><span>Links, Lists &amp; Tables Styling<small>:hover, list-style, striped tables</small></span></li>
+            <li><span class="no">15</span><span>Display &amp; Flexbox<small>block, inline, flex, justify, align, gap</small></span></li>
+            <li><span class="no">16</span><span>Positioning, z-index &amp; Overflow<small>relative, absolute, fixed, sticky</small></span></li>
+            <li><span class="no">17</span><span>Float &amp; Clear<small>float left/right, clear both</small></span></li>
+            <li><span class="no">18</span><span>CSS Transform (2D)<small>translate(), rotate(), scale(), skew()</small></span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="rules-sec" id="rules">
+    <div class="container">
+      <div class="sec-head">
+        <div class="kicker" style="color:var(--gold2)">⚠ Examination Policy</div>
+        <h2>Strict Test Rules</h2>
+        <p>Ye rules har student par lagu hain. Kisi bhi khilaf-warzi par test khud-kar cancel ho jayega — koi warning dobara nahi milegi.</p>
+      </div>
+      <div class="grid3">
+        <div class="rule-card danger"><h3>🔁 One-Time Attempt</h3><p>Har student sirf <b>EK dafa</b> test de sakta hai. Ek dafa start / submit / cancel ke baad dobara attempt system khud block kar dega.</p></div>
+        <div class="rule-card danger"><h3>🚫 Tab / Page Change = Cancel</h3><p>Test ke doran tab change, browser minimize, ya dusri app/page kholne par test <b>foran CANCEL</b> ho jayega.</p></div>
+        <div class="rule-card danger"><h3>❌ Page Close / Refresh = Cancel</h3><p>Page band ya refresh karne par bhi test cancel ho jayega aur aap ki attempt record ho jayegi.</p></div>
+        <div class="rule-card"><h3>🖥 Full-Screen Mode</h3><p>Poora test full-screen mein hoga. Full-screen se bahar nikalna bhi cancellation ki wajah banega.</p></div>
+        <div class="rule-card"><h3>⏱ 100 Minutes Fixed Time</h3><p>100 sawalon ke liye kul 100 minutes. Time khatam hote hi test khud submit ho jayega — extra time nahi milega.</p></div>
+        <div class="rule-card"><h3>📵 No Copy / Paste</h3><p>Test ke doran copy, paste aur right-click band hai. Apne jawab khud sochein — ye aap ki asal progress ka imtihan hai.</p></div>
+      </div>
+      <div style="text-align:center;margin-top:26px"><a href="#start" class="btn" style="width:auto;padding:14px 38px">Mein Tayyar Hoon — Test Start Karein ↑</a></div>
+    </div>
+  </section>
+</div>
+
+<!-- ================= TEST ================= -->
+<section id="view-test" class="hidden">
+  <div class="test-shell">
+    <div class="test-grid">
+      <div class="q-card">
+        <div class="q-meta">
+          <span class="q-topic" id="q-topic">Topic</span>
+          <span class="q-count" id="q-count">Question 1 / 100</span>
+        </div>
+        <div class="q-progress"><i id="progress"></i></div>
+        <div class="q-text" id="q-text"></div>
+        <div id="q-options"></div>
+        <div class="nav-row">
+          <button class="btn ghost" id="btn-prev" type="button">⬅ Previous</button>
+          <button class="btn ghost" id="btn-next" type="button">Next ➡</button>
+        </div>
+        <button class="btn green" id="btn-submit" type="button" style="margin-top:14px">✔ &nbsp;Submit Final Test</button>
+      </div>
+
+      <aside class="side-card">
+        <div class="student-chip">
+          <div class="avatar" id="avatar-initial">S</div>
+          <div>
+            <div style="font-weight:800;color:var(--navy);font-family:Poppins" id="th-name">Student</div>
+            <div style="font-size:12.5px;color:var(--muted)">Full Stack Web Development • HTML + CSS</div>
+          </div>
+        </div>
+        <div class="timer-box" id="timer-box">
+          <div class="lbl">TIME REMAINING</div>
+          <div class="timer" id="timer">01:40:00</div>
+        </div>
+        <div class="side-stat"><span>Answered</span><b><span id="th-answered">0</span> / 100</b></div>
+        <div class="side-stat"><span>Course</span><b>HTML + CSS</b></div>
+        <div class="side-stat"><span>Mode</span><b style="color:var(--red)">Strict • One-Time</b></div>
+        <div style="font-weight:800;color:var(--navy);margin-top:13px;font-family:Poppins;font-size:14px">Question Palette</div>
+        <div class="palette" id="palette"></div>
+        <div class="legend"><span><i style="background:#d9f2e5;border:1px solid var(--green)"></i>Answered</span><span><i style="background:var(--navy)"></i>Current</span><span><i style="background:#fff;border:1px solid #c3d5e8"></i>Pending</span></div>
+        <p style="font-size:12px;color:var(--muted);margin-top:12px">⚠ Tab change, page close ya full-screen se exit = <b style="color:var(--red)">Test Cancelled</b></p>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ================= RESULT ================= -->
+<section id="view-result" class="hidden">
+  <div class="result-wrap">
+    <div class="result-card">
+      <img src="assets/logo.png" alt="STC" style="width:86px;height:86px;object-fit:contain">
+      <h2 style="color:var(--navy);margin-top:10px">Test Submitted Successfully ✔</h2>
+      <p style="color:var(--muted)" id="res-course">Full Stack Web Development Test (HTML + CSS)</p>
+      <div class="score-circle" id="score-circle"><b id="res-score">0</b><span>out of 100</span></div>
+      <h3 id="res-status" style="font-size:21px"></h3>
+      <div class="detail-grid">
+        <div class="dstat"><b id="res-name">-</b><span>Student</span></div>
+        <div class="dstat"><b id="res-percent">0%</b><span>Percentage</span></div>
+        <div class="dstat"><b id="res-correct">0</b><span>Correct</span></div>
+        <div class="dstat"><b id="res-time">-</b><span>Time Used</span></div>
+      </div>
+      <p style="color:var(--muted);font-size:14px">Aap ka result admin panel mein save ho gaya hai. Ye attempt final hai — dobara test nahi diya ja sakta. Result slip ke liye apne teacher se rabta karein.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CANCELLED ================= -->
+<section id="view-cancelled" class="hidden">
+  <div class="result-wrap">
+    <div class="result-card">
+      <div style="font-size:56px">⛔</div>
+      <h2 style="color:var(--red)">TEST CANCELLED</h2>
+      <p id="cancel-reason" style="margin:10px 0;font-weight:700"></p>
+      <p style="color:var(--muted);font-size:14.5px;line-height:1.65">Strict policy ke tehat aap ka test cancel kar diya gaya hai aur ye attempt record ho gayi hai.<br>Dobara test ke liye apne teacher / admin se rabta karein — sirf admin hi aap ka record reset kar sakta hai.</p>
+      <div class="detail-grid">
+        <div class="dstat"><b id="cx-name">-</b><span>Student</span></div>
+        <div class="dstat"><b id="cx-answered">0</b><span>Answered</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="fgrid">
+    <div>
+      <div class="fbrand"><img src="assets/logo.png" alt="STC"><div><b style="color:#fff;font-family:Poppins;font-size:16px">Super Sys-Tech Computers Centre</b><br><span style="font-size:12px">Struggle for Computer Literacy</span></div></div>
+      <p>Umerkot ka maroof computer institute — 1997 se quality computer education. CIT, DIT, Web Development, Graphic Designing, AI &amp; Robotics aur mazeed professional courses.</p>
+    </div>
+    <div>
+      <h4>Quick Links</h4>
       <ul>
-        <li><b>One Time Attempt:</b> Har student sirf <b>EK dafa</b> test de sakta hai. Dobara attempt allowed nahi.</li>
-        <li><b>Tab / Page Change = Test Cancel:</b> Test ke doran tab change, browser minimize, dusri app ya page kholne par test <b>foran CANCEL</b> ho jayega.</li>
-        <li><b>Page Close / Refresh = Test Cancel:</b> Page band ya refresh karne par test cancel ho jayega aur attempt count ho jayegi.</li>
-        <li><b>Full Screen:</b> Test full screen mein hoga. Full screen se bahar nikalne par bhi test cancel ho jayega.</li>
-        <li><b>Time:</b> 100 sawalon ke liye kul <b>100 minutes</b> hain. Time khatam hone par test khud submit ho jayega.</li>
-        <li>Copy / paste aur right-click test ke doran band hai.</li>
+        <li><a href="#start">Start Test</a></li>
+        <li><a href="#syllabus">Test Syllabus</a></li>
+        <li><a href="#rules">Test Rules</a></li>
+        <li><a href="admin.html">Admin Panel</a></li>
+        <li><a href="https://stc.edu.pk" target="_blank" rel="noopener">stc.edu.pk</a></li>
       </ul>
     </div>
-
-    <form id="entry-form" autocomplete="off">
-      <div class="field">
-        <label for="student-name">Student Full Name *</label>
-        <input type="text" id="student-name" placeholder="e.g. Ali Raza" required>
-      </div>
-      <div class="field">
-        <label for="student-roll">Roll No / Seat No *</label>
-        <input type="text" id="student-roll" placeholder="e.g. 101" required>
-      </div>
-      <button class="btn" type="submit">▶ Start Test</button>
-      <div class="err" id="entry-err"></div>
-    </form>
-  </section>
-
-  <!-- ===== TEST ===== -->
-  <section id="view-test" class="hidden">
-    <div class="test-head">
-      <div>👤 <b id="th-name"></b> &nbsp;|&nbsp; Roll: <b id="th-roll"></b></div>
-      <div class="spacer" style="flex:1"></div>
-      <div>Answered: <b id="th-answered">0</b>/100</div>
-      <div class="timer" id="timer">01:40:00</div>
+    <div>
+      <h4>Contact Us</h4>
+      <p>📍 1st Floor, Jameel Market, Umerkot, Sindh<br>📞 0332-3350790<br>📞 0345-3279790<br>🌐 stc.edu.pk</p>
     </div>
-    <div class="progress-wrap"><div class="progress-bar" id="progress"></div></div>
-
-    <div class="card">
-      <span class="q-topic" id="q-topic">Topic</span>
-      <span style="float:right;font-weight:800;color:var(--muted)" id="q-count">Question 1 / 100</span>
-      <div class="q-text" id="q-text"></div>
-      <div id="q-options"></div>
-      <div class="nav-row">
-        <button class="btn ghost" id="btn-prev" type="button">⬅ Previous</button>
-        <button class="btn ghost" id="btn-next" type="button">Next ➡</button>
-      </div>
-      <button class="btn green" id="btn-submit" type="button" style="margin-top:14px">✔ Submit Final Test</button>
-    </div>
-
-    <div class="card" style="margin-top:14px">
-      <b>Question Palette</b> <span style="color:var(--muted);font-size:13px">(kisi bhi number par click karke us sawal par jayein - ye test ke andar hai, allowed hai)</span>
-      <div class="palette" id="palette"></div>
-    </div>
-  </section>
-
-  <!-- ===== RESULT ===== -->
-  <section id="view-result" class="card result-big hidden">
-    <img src="assets/logo.png" alt="STC" style="width:84px;height:84px;object-fit:contain">
-    <h2 style="color:var(--navy);margin-top:8px">Test Submitted Successfully ✔</h2>
-    <p style="color:var(--muted)" id="res-course">Full Stack Web Development Test (HTML + CSS)</p>
-    <div class="score-circle" id="score-circle"><b id="res-score">0</b><span>out of 100</span></div>
-    <h3 id="res-status"></h3>
-    <div class="detail-grid">
-      <div class="stat"><b id="res-name">-</b><span>Student</span></div>
-      <div class="stat"><b id="res-roll">-</b><span>Roll No</span></div>
-      <div class="stat"><b id="res-percent">0%</b><span>Percentage</span></div>
-      <div class="stat"><b id="res-correct">0</b><span>Correct</span></div>
-      <div class="stat"><b id="res-time">-</b><span>Time Used</span></div>
-    </div>
-    <p style="color:var(--muted);font-size:14px">Aap ka result admin panel mein save ho gaya hai. Ye attempt final hai - dobara test nahi diya ja sakta.</p>
-  </section>
-
-  <!-- ===== CANCELLED ===== -->
-  <section id="view-cancelled" class="card result-big hidden">
-    <div style="font-size:56px">⛔</div>
-    <h2 style="color:var(--red)">TEST CANCELLED</h2>
-    <p id="cancel-reason" style="margin:10px 0;font-weight:700"></p>
-    <p style="color:var(--muted);font-size:14.5px;line-height:1.6">Strict policy ke tehat aap ka test cancel kar diya gaya hai aur ye attempt record ho gayi hai.<br>Dobara test ke liye apne teacher / admin se rabta karein - sirf admin hi aap ka record reset kar sakta hai.</p>
-    <div class="detail-grid">
-      <div class="stat"><b id="cx-name">-</b><span>Student</span></div>
-      <div class="stat"><b id="cx-roll">-</b><span>Roll No</span></div>
-      <div class="stat"><b id="cx-answered">0</b><span>Answered</span></div>
-    </div>
-  </section>
-
-</div>
-<div class="footer">Super Sys-Tech Computers Centre, 1st Floor Jameel Market, Umerkot &bull; 0332-3350790 | 0345-3279790 &bull; stc.edu.pk</div>
+  </div>
+  <div class="copyright">© 2026 Super Sys-Tech Computers Centre, Umerkot — All Rights Reserved • Full Stack Web Development Test (HTML + CSS)</div>
+</footer>
 
 <script src="js/config.js"></script>
 <script src="js/questions.js"></script>
 <script src="js/app.js"></script>
+<script>
+  // Avatar initial in test sidebar
+  document.getElementById('entry-form').addEventListener('submit', function(){
+    var n = document.getElementById('student-name').value.trim();
+    if(n) document.getElementById('avatar-initial').textContent = n.charAt(0).toUpperCase();
+  }, true);
+</script>
 </body>
 </html>
