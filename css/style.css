@@ -52,8 +52,8 @@ a{color:var(--blue);text-decoration:none}
 .hstat span{font-size:11.5px;color:#a9c6e2;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
 
 /* entry card */
-.entry-card{background:#fff;color:var(--ink);border-radius:20px;box-shadow:0 24px 60px rgba(0,0,0,.35);padding:28px 26px;position:relative}
-.entry-card::before{content:"";position:absolute;top:0;left:0;right:0;height:6px;border-radius:20px 20px 0 0;background:linear-gradient(90deg,var(--gold),#ffcf5c,var(--gold))}
+.entry-card{background:#fff;color:var(--ink);border:1.5px solid #d7e5f2;border-radius:20px;box-shadow:0 24px 60px rgba(0,0,0,.35),0 0 0 1px rgba(255,255,255,.25);padding:30px 26px 28px;position:relative}
+.entry-card::before{content:"";position:absolute;top:12px;left:22px;right:22px;height:5px;border-radius:99px;background:linear-gradient(90deg,var(--gold),#ffcf5c,var(--gold))}
 .entry-card .ec-head{display:flex;align-items:center;gap:13px;margin-bottom:6px}
 .entry-card .ec-head img{width:56px;height:56px;object-fit:contain}
 .entry-card h2{font-size:20px;color:var(--navy)}
