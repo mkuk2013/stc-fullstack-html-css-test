@@ -222,9 +222,9 @@ tr:hover td{background:#eef5fd}
 .grade.ga{background:#fef3c7;color:#92400e}.grade.gb{background:#dbeafe;color:#1e40af}.grade.gc{background:#e0e7ff;color:#3730a3}.grade.gd{background:#ffedd5;color:#9a3412}.grade.gf{background:#fee2e2;color:#b91c1c}.grade.gx{background:#e5e7eb;color:#6b7280}
 .pos{display:inline-flex;width:27px;height:27px;border-radius:50%;align-items:center;justify-content:center;font-weight:800;font-size:12.5px;background:#eef2f7;color:var(--navy)}
 .pos.p1{background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#fff}.pos.p2{background:linear-gradient(135deg,#9ca3af,#d1d5db);color:#fff}.pos.p3{background:linear-gradient(135deg,#b45309,#d97706);color:#fff}
-.sign-block{text-align:center;font-size:13px;font-weight:700;color:var(--navy)}
-.sign-line{border-bottom:2px solid var(--navy);width:230px;margin:0 auto 6px;height:8px}
-.sign-img{display:block;height:46px;max-width:230px;object-fit:contain;margin:0 auto}
+.sign-block{text-align:center;font-size:12.5px;font-weight:700;color:var(--navy);letter-spacing:.4px}
+.sign-line{border-bottom:1.6px solid var(--navy);width:200px;margin:0 auto 5px;height:6px}
+.sign-img{display:block;height:32px;max-width:180px;object-fit:contain;margin:0 auto 2px}
 /* print */
 @media print{
   body{background:#fff}
