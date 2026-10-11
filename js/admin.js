@@ -34,14 +34,14 @@ function render(){
   $("st-high").textContent = all.length ? Math.max.apply(null, all.map(r=>r.score)) : 0;
   $("print-date").textContent = "Printed on: " + new Date().toLocaleString("en-GB",{timeZone:"Asia/Karachi"});
 
-  currentList = all.filter(r => (!f || r.status===f) && (!q || r.name.toLowerCase().includes(q) || String(r.roll).toLowerCase().includes(q)));
+  currentList = all.filter(r => (!f || r.status===f) && (!q || r.name.toLowerCase().includes(q)));
   const tb = $("results-body"); tb.innerHTML="";
   $("no-results").classList.toggle("hidden", all.length>0);
   currentList.forEach(function(r, i){
     const tr = document.createElement("tr");
     const pass = isPass(r);
     tr.innerHTML =
-      "<td>"+(i+1)+"</td><td><b>"+esc(r.name)+"</b></td><td>"+esc(r.roll)+"</td>"+
+      "<td>"+(i+1)+"</td><td><b>"+esc(r.name)+"</b></td>"+
       "<td><b>"+r.score+"</b>/"+r.total+"</td><td>"+r.percent+"%</td>"+
       "<td>"+(r.status==="Cancelled" ? "<span style='color:var(--red);font-weight:800'>CANCELLED</span>" : (pass ? "<span style='color:var(--green);font-weight:800'>PASS</span>" : "<span style='color:var(--red);font-weight:800'>FAIL</span>"))+"</td>"+
       "<td><span class='badge "+(r.status==="Completed"?"ok":"cancel")+"'>"+esc(r.status)+"</span>"+(r.reason && r.status==="Cancelled" ? "<div style='font-size:11px;color:var(--muted);max-width:170px'>"+esc(r.reason)+"</div>" : "")+"</td>"+
@@ -66,7 +66,7 @@ $("filter-status").addEventListener("change", render);
 
 // Delete one (retake allow)
 function delRecord(r){
-  if(!confirm("'" + r.name + "' (Roll: " + r.roll + ") ka result DELETE karein?\nIs ke baad ye student DOBARA test de sakega.")) return;
+  if(!confirm("'" + r.name + "' ka result DELETE karein?\nIs ke baad ye student DOBARA test de sakega.")) return;
   saveResults(getResults().filter(x => !(x.key===r.key && x.date===r.date)));
   render();
 }
@@ -97,7 +97,6 @@ function printSlip(r){
     "<h3 style='margin-top:10px'>RESULT SLIP</h3><div style='font-weight:700'>Full Stack Web Development Test (HTML + CSS)</div></div>" +
     "<table><tbody>" +
     "<tr><td>Student Name</td><td><b>"+esc(r.name)+"</b></td></tr>" +
-    "<tr><td>Roll No / Seat No</td><td>"+esc(r.roll)+"</td></tr>" +
     "<tr><td>Total Questions</td><td>"+r.total+" MCQs</td></tr>" +
     "<tr><td>Attempted / Answered</td><td>"+r.answered+"</td></tr>" +
     "<tr><td>Correct Answers</td><td>"+r.correct+"</td></tr>" +
@@ -121,9 +120,9 @@ function printSlip(r){
 $("btn-csv").addEventListener("click", function(){
   const all = getResults();
   if(!all.length){ alert("Export ke liye koi result nahi hai."); return; }
-  let csv = "No,Student Name,Roll No,Score,Total,Percent,Result,Status,Reason,Answered,Time Used,Date\n";
+  let csv = "No,Student Name,Score,Total,Percent,Result,Status,Reason,Answered,Time Used,Date\n";
   all.forEach(function(r,i){
-    const vals=[i+1,r.name,r.roll,r.score,r.total,r.percent+"%",(r.status==="Cancelled"?"CANCELLED":(isPass(r)?"PASS":"FAIL")),r.status,(r.reason||""),r.answered,(r.timeUsed||""),r.date];
+    const vals=[i+1,r.name,r.score,r.total,r.percent+"%",(r.status==="Cancelled"?"CANCELLED":(isPass(r)?"PASS":"FAIL")),r.status,(r.reason||""),r.answered,(r.timeUsed||""),r.date];
     csv += vals.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(",")+"\n";
   });
   const a=document.createElement("a");
