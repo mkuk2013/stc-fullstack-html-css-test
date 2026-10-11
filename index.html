@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Full Stack Web Development Test (HTML + CSS) - Super Sys-Tech Computers Centre Umerkot</title>
+<link rel="icon" href="assets/logo.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="topbar">
+  <img src="assets/logo.png" alt="STC Logo">
+  <div>
+    <div class="t1">Super Sys-Tech Computers Centre</div>
+    <div class="t2">Umerkot &bull; Struggle for Computer Literacy &bull; Since 1997</div>
+  </div>
+  <div class="spacer"></div>
+  <a class="admin-link" href="admin.html">Admin Panel</a>
+</header>
+
+<div class="wrap">
+
+  <!-- ===== HOME / ENTRY ===== -->
+  <section id="view-home" class="card hero">
+    <img src="assets/logo.png" alt="Super Sys-Tech Computers Centre Logo">
+    <h1>Super Sys-Tech Computers Centre, Umerkot</h1>
+    <div><span class="course">Full Stack Web Development Test (HTML + CSS)</span></div>
+    <p class="tag">Online MCQ Test &bull; HTML (Topics 1-9) + CSS (Topics 10-29)</p>
+
+    <div class="stats-row">
+      <div class="stat"><b>100</b><span>Total MCQs</span></div>
+      <div class="stat"><b>100 Min</b><span>Time Allowed</span></div>
+      <div class="stat"><b>100</b><span>Total Marks</span></div>
+      <div class="stat"><b>40%</b><span>Passing Marks</span></div>
+    </div>
+
+    <div class="rules">
+      <h3>⚠️ STRICT TEST RULES - Dhyan se parhein:</h3>
+      <ul>
+        <li><b>One Time Attempt:</b> Har student sirf <b>EK dafa</b> test de sakta hai. Dobara attempt allowed nahi.</li>
+        <li><b>Tab / Page Change = Test Cancel:</b> Test ke doran tab change, browser minimize, dusri app ya page kholne par test <b>foran CANCEL</b> ho jayega.</li>
+        <li><b>Page Close / Refresh = Test Cancel:</b> Page band ya refresh karne par test cancel ho jayega aur attempt count ho jayegi.</li>
+        <li><b>Full Screen:</b> Test full screen mein hoga. Full screen se bahar nikalne par bhi test cancel ho jayega.</li>
+        <li><b>Time:</b> 100 sawalon ke liye kul <b>100 minutes</b> hain. Time khatam hone par test khud submit ho jayega.</li>
+        <li>Copy / paste aur right-click test ke doran band hai.</li>
+      </ul>
+    </div>
+
+    <form id="entry-form" autocomplete="off">
+      <div class="field">
+        <label for="student-name">Student Full Name *</label>
+        <input type="text" id="student-name" placeholder="e.g. Ali Raza" required>
+      </div>
+      <div class="field">
+        <label for="student-roll">Roll No / Seat No *</label>
+        <input type="text" id="student-roll" placeholder="e.g. 101" required>
+      </div>
+      <button class="btn" type="submit">▶ Start Test</button>
+      <div class="err" id="entry-err"></div>
+    </form>
+  </section>
+
+  <!-- ===== TEST ===== -->
+  <section id="view-test" class="hidden">
+    <div class="test-head">
+      <div>👤 <b id="th-name"></b> &nbsp;|&nbsp; Roll: <b id="th-roll"></b></div>
+      <div class="spacer" style="flex:1"></div>
+      <div>Answered: <b id="th-answered">0</b>/100</div>
+      <div class="timer" id="timer">01:40:00</div>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" id="progress"></div></div>
+
+    <div class="card">
+      <span class="q-topic" id="q-topic">Topic</span>
+      <span style="float:right;font-weight:800;color:var(--muted)" id="q-count">Question 1 / 100</span>
+      <div class="q-text" id="q-text"></div>
+      <div id="q-options"></div>
+      <div class="nav-row">
+        <button class="btn ghost" id="btn-prev" type="button">⬅ Previous</button>
+        <button class="btn ghost" id="btn-next" type="button">Next ➡</button>
+      </div>
+      <button class="btn green" id="btn-submit" type="button" style="margin-top:14px">✔ Submit Final Test</button>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <b>Question Palette</b> <span style="color:var(--muted);font-size:13px">(kisi bhi number par click karke us sawal par jayein - ye test ke andar hai, allowed hai)</span>
+      <div class="palette" id="palette"></div>
+    </div>
+  </section>
+
+  <!-- ===== RESULT ===== -->
+  <section id="view-result" class="card result-big hidden">
+    <img src="assets/logo.png" alt="STC" style="width:84px;height:84px;object-fit:contain">
+    <h2 style="color:var(--navy);margin-top:8px">Test Submitted Successfully ✔</h2>
+    <p style="color:var(--muted)" id="res-course">Full Stack Web Development Test (HTML + CSS)</p>
+    <div class="score-circle" id="score-circle"><b id="res-score">0</b><span>out of 100</span></div>
+    <h3 id="res-status"></h3>
+    <div class="detail-grid">
+      <div class="stat"><b id="res-name">-</b><span>Student</span></div>
+      <div class="stat"><b id="res-roll">-</b><span>Roll No</span></div>
+      <div class="stat"><b id="res-percent">0%</b><span>Percentage</span></div>
+      <div class="stat"><b id="res-correct">0</b><span>Correct</span></div>
+      <div class="stat"><b id="res-time">-</b><span>Time Used</span></div>
+    </div>
+    <p style="color:var(--muted);font-size:14px">Aap ka result admin panel mein save ho gaya hai. Ye attempt final hai - dobara test nahi diya ja sakta.</p>
+  </section>
+
+  <!-- ===== CANCELLED ===== -->
+  <section id="view-cancelled" class="card result-big hidden">
+    <div style="font-size:56px">⛔</div>
+    <h2 style="color:var(--red)">TEST CANCELLED</h2>
+    <p id="cancel-reason" style="margin:10px 0;font-weight:700"></p>
+    <p style="color:var(--muted);font-size:14.5px;line-height:1.6">Strict policy ke tehat aap ka test cancel kar diya gaya hai aur ye attempt record ho gayi hai.<br>Dobara test ke liye apne teacher / admin se rabta karein - sirf admin hi aap ka record reset kar sakta hai.</p>
+    <div class="detail-grid">
+      <div class="stat"><b id="cx-name">-</b><span>Student</span></div>
+      <div class="stat"><b id="cx-roll">-</b><span>Roll No</span></div>
+      <div class="stat"><b id="cx-answered">0</b><span>Answered</span></div>
+    </div>
+  </section>
+
+</div>
+<div class="footer">Super Sys-Tech Computers Centre, 1st Floor Jameel Market, Umerkot &bull; 0332-3350790 | 0345-3279790 &bull; stc.edu.pk</div>
+
+<script src="js/config.js"></script>
+<script src="js/questions.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
