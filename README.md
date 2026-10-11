@@ -1,31 +1,29 @@
-# Full Stack Web Development Test (HTML + CSS)
+# Full Stack Web Development Test (HTML + CSS) - STC Umerkot
 
-**Super Sys-Tech Computers Centre, Umerkot** - Online MCQ Test Website
+Official online MCQ test website of **Super Sys-Tech Computers Centre, Umerkot**.
 
 ## Features
-- **100 MCQs** from the Full Stack syllabus: HTML Topics 1-9 + CSS Topics 10-29 (all 29 topics covered)
-- **Student Entry:** Student pehle sirf apna Full Name likhta hai, phir test start hota hai
-- **Timer:** 100 MCQs ke liye 100 Minutes - time khatam hone par auto-submit
-- **One-Time Attempt:** Har student sirf ek dafa test de sakta hai
+- **100 MCQs** - HTML (Topics 1-9) + CSS (Topics 10-29), based on the complete syllabus
+- **Student Entry:** The student simply enters their Full Name and the test starts (no roll number)
+- **100 Minutes Timer** - auto-submit when time ends
+- **One-Time Attempt:** Each student can take the test only once
 - **Strict Policy:**
-  - Tab / page change, browser minimize = **Test Cancelled**
-  - Page close / refresh = **Test Cancelled** (attempt record ho jati hai)
-  - Full Screen mode - bahar nikalne par cancel
+  - Tab change / minimize / opening another page = **Test Cancelled**
+  - Page close / refresh = **Test Cancelled** (the attempt is recorded)
+  - Exiting full-screen = **Test Cancelled**
   - Copy / paste / right-click disabled
-- **Admin Panel (`/admin.html`):**
-  - Password: `STC@Admin2026` (change in `js/config.js`)
-  - Sab students ke results, stats (total, pass, average, highest)
-  - Search / filter
-  - **Ek Hi PDF Download** - sab students ke naam EK hi Result Sheet (PDF) mein (Print window mein "Save as PDF"); alag-alag PDF nahi
-  - **Print Result Sheet** - sab ki combined sheet print
-  - **CSV / Excel** export
-  - Ek student ka record delete karne se wo dobara test de sakta hai
+- **Instant Result:** Score, percentage and PASS/FAIL immediately on the screen, plus a **Download My Result (PDF)** button for the student's own signed result slip
+- **Admin Panel (`admin.html`, password protected):**
+  - Professional result sheet with letterhead, grades and merit positions; in PDF only **Name, Marks, Percentage** are printed
+  - **Download Combined PDF** - all students on ONE result sheet (via the print window's "Save as PDF"); no separate per-student PDFs from the admin panel
+  - CSV export, search, filters, statistics
+  - Deleting a student's record allows that student to retake the test
 
-## Note on Results Storage
-Results usi browser/device ke local storage mein save hote hain jahan student test deta hai (institute lab model). Admin panel bhi usi computer/browser mein kholna hai. Multi-device central results ke liye backend (database) version alag se banaya ja sakta hai.
+## Note
+Results are saved in the local storage of the browser/device where the student takes the test (institute lab model). The admin panel must be opened on the same computer/browser. A backend (database) version can be built separately for central multi-device results.
 
 ## Run Locally
-Koi bhi static server: `python3 -m http.server 8000` phir `http://localhost:8000`
+Any static server: `python3 -m http.server 8000`, then open `http://localhost:8000`
 
 ## Deploy
-Static site - Netlify / GitHub Pages / koi bhi static hosting. Build command: none, Publish directory: root (`.`)
+Static site - Netlify / GitHub Pages / any static hosting. Build command: none, Publish directory: root (`.`)
