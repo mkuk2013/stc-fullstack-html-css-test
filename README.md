@@ -4,7 +4,7 @@
 
 ## Features
 - **100 MCQs** from the Full Stack syllabus: HTML Topics 1-9 + CSS Topics 10-29 (all 29 topics covered)
-- **Student Entry:** Student pehle apna Full Name aur Roll No likhta hai, phir test start hota hai
+- **Student Entry:** Student pehle sirf apna Full Name likhta hai, phir test start hota hai
 - **Timer:** 100 MCQs ke liye 100 Minutes - time khatam hone par auto-submit
 - **One-Time Attempt:** Har student sirf ek dafa test de sakta hai
 - **Strict Policy:**
