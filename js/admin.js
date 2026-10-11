@@ -6,6 +6,7 @@ function getResults(){ try { return JSON.parse(localStorage.getItem(CONFIG.RESUL
 function saveResults(r){ localStorage.setItem(CONFIG.RESULTS_KEY, JSON.stringify(r)); }
 function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
 
+let currentList = [];
 if(sessionStorage.getItem("stc_admin")==="1"){ showPanel(); }
 $("login-form").addEventListener("submit", function(e){
   e.preventDefault();
@@ -20,7 +21,6 @@ $("btn-logout") && $("btn-logout").addEventListener("click", function(){ session
 function showPanel(){ $("admin-login").classList.add("hidden"); $("admin-panel").classList.remove("hidden"); render(); }
 function isPass(r){ return r.status==="Completed" && r.percent >= CONFIG.PASS_PERCENT; }
 
-let currentList = [];
 function render(){
   const q = ($("search").value||"").toLowerCase();
   const f = $("filter-status").value;
