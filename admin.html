@@ -33,11 +33,11 @@
     <div style="text-align:center">
       <img src="assets/logo.png" style="width:92px;height:92px;object-fit:contain" alt="STC">
       <h2 style="color:var(--navy);margin:12px 0 4px;font-size:23px">Admin Login</h2>
-      <p style="color:var(--muted);font-size:13.5px">Full Stack Web Development Test (HTML + CSS)<br>Sirf institute admin / teacher ke liye</p>
+      <p style="color:var(--muted);font-size:13.5px">Full Stack Web Development Test (HTML + CSS)<br>For the institute admin / teacher only</p>
     </div>
     <form id="login-form">
       <div class="field"><label for="admin-pass">Admin Password</label>
-      <input type="password" id="admin-pass" placeholder="Password likhein" required></div>
+      <input type="password" id="admin-pass" placeholder="Enter admin password" required></div>
       <button class="btn" type="submit">🔐 &nbsp;Login to Dashboard</button>
       <div class="err" id="login-err"></div>
     </form>
@@ -81,19 +81,19 @@
 
       <div class="panel-card">
         <div class="toolbar no-print">
-          <input type="text" id="search" placeholder="🔍 Student ke naam se search karein..." style="flex:1;min-width:190px">
+          <input type="text" id="search" placeholder="🔍 Search by student name..." style="flex:1;min-width:190px">
           <select id="filter-status" style="width:auto">
             <option value="">All Status</option>
             <option>Completed</option>
             <option>Cancelled</option>
           </select>
-          <button class="btn small green" id="btn-pdf-all" type="button">⬇ Ek Hi PDF Download — Sab Students</button>
+          <button class="btn small green" id="btn-pdf-all" type="button">⬇ Download Combined PDF — All Students</button>
           <button class="btn small" id="btn-print-all" type="button">🖨 Print Result Sheet</button>
           <button class="btn small ghost" id="btn-csv" type="button">⬇ CSV / Excel</button>
           <button class="btn small red" id="btn-clear" type="button">🗑 Clear All</button>
           <button class="btn small ghost" id="btn-logout" type="button">Logout</button>
         </div>
-        <p class="no-print" style="font-size:13px;color:var(--muted);line-height:1.6">💡 <b>Ek Hi PDF:</b> "Ek Hi PDF Download" dabane par <b>sab students ke naam ek hi Result Sheet</b> mein ayenge — print window mein Destination <b>"Save as PDF"</b> select karke ek hi PDF file save karein. Alag-alag PDF nahi banti.<br>🗑 Ek student ka record delete karne se wo student <b>dobara test</b> de sakta hai (retake sirf admin allow kar sakta hai).</p>
+        <p class="no-print" style="font-size:13px;color:var(--muted);line-height:1.6">💡 <b>One Combined PDF:</b> Clicking "Download Combined PDF" puts <b>all students on one single Result Sheet</b> — in the print window, select Destination <b>"Save as PDF"</b> and save one PDF file. Separate per-student PDFs are not created from here.<br>🗑 Deleting a student's record allows that student to <b>retake the test</b> (only the admin can allow a retake).</p>
 
         <div class="tbl-wrap" style="margin-top:14px">
         <table id="results-table">
@@ -103,7 +103,7 @@
           <tbody id="results-body"></tbody>
         </table>
         </div>
-        <p id="no-results" style="text-align:center;color:var(--muted);padding:26px" class="hidden">Abhi tak kisi student ne test nahi diya.<br><span style="font-size:13px">Results yahan usi browser/device par nazar ayenge jahan students ne test diya ho.</span></p>
+        <p id="no-results" style="text-align:center;color:var(--muted);padding:26px" class="hidden">No student has taken the test yet.<br><span style="font-size:13px">Results appear here in the same browser/device where the students took the test.</span></p>
       </div>
       <div class="print-sign"><div class="sign-block"><img src="assets/instructor-sign.png" alt="Instructor Signature" class="sign-img"><div class="sign-line"></div><div>Instructor Signature</div></div></div>
     </div>
