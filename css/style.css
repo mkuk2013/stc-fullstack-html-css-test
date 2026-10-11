@@ -208,6 +208,7 @@ tr:hover td{background:#eef5fd}
 }
 @media(max-width:560px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.palette{grid-template-columns:repeat(5,1fr)}.hero-grid h1{font-size:26px}.q-text{font-size:17px}}
 
+.print-sign{display:none}
 /* print */
 @media print{
   body{background:#fff}
@@ -216,4 +217,5 @@ tr:hover td{background:#eef5fd}
   .panel-card,.result-card{box-shadow:none;border:none;padding:4px}
   .kpi{color:#000;background:#eee!important;-webkit-print-color-adjust:exact}
   table{font-size:12px}
+  .print-sign{display:flex;justify-content:space-between;margin-top:38px;font-size:13px;font-weight:600}
 }
