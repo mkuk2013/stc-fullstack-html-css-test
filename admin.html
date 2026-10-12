@@ -87,13 +87,15 @@
             <option>Completed</option>
             <option>Cancelled</option>
           </select>
+          <button class="btn small" id="btn-retrieve" type="button" style="background:linear-gradient(180deg,#7c3aed,#5b21b6);box-shadow:0 8px 20px rgba(124,58,237,.28)">↻ Retrieve Data</button>
           <button class="btn small green" id="btn-pdf-all" type="button">⬇ Download Combined PDF — All Students</button>
           <button class="btn small" id="btn-print-all" type="button">🖨 Print Result Sheet</button>
           <button class="btn small ghost" id="btn-csv" type="button">⬇ CSV / Excel</button>
           <button class="btn small red" id="btn-clear" type="button">🗑 Clear All</button>
           <button class="btn small ghost" id="btn-logout" type="button">Logout</button>
         </div>
-        <p class="no-print" style="font-size:13px;color:var(--muted);line-height:1.6">💡 <b>One Combined PDF:</b> Clicking "Download Combined PDF" puts <b>all students on one single Result Sheet</b> — in the print window, select Destination <b>"Save as PDF"</b> and save one PDF file. Separate per-student PDFs are not created from here.<br>🗑 Deleting a student's record allows that student to <b>retake the test</b> (only the admin can allow a retake).</p>
+        <p class="no-print hidden" id="retrieve-status" style="font-size:13.5px;font-weight:700;padding:10px 14px;border-radius:10px;margin-bottom:10px"></p>
+        <p class="no-print" style="font-size:13px;color:var(--muted);line-height:1.6">💡 <b>Retrieve Data:</b> Fetches all results from the central database into this panel, and also uploads any old results stored on this device into the central database.<br>💡 <b>One Combined PDF:</b> Clicking "Download Combined PDF" puts <b>all students on one single Result Sheet</b> — in the print window, select Destination <b>"Save as PDF"</b> and save one PDF file. Separate per-student PDFs are not created from here.<br>🗑 Deleting a student's record allows that student to <b>retake the test</b> (only the admin can allow a retake).</p>
 
         <div class="tbl-wrap" style="margin-top:14px">
         <table id="results-table">
