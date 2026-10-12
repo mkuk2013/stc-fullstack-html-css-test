@@ -15,18 +15,30 @@ function shuffle(arr){ const a = arr.slice(); for(let i=a.length-1;i>0;i--){ con
 function show(view){ ["view-home","view-test","view-result","view-cancelled"].forEach(v=>$(v).classList.toggle("hidden", v!==view)); window.scrollTo(0,0); }
 
 // ---------- Entry ----------
-$("entry-form").addEventListener("submit", function(e){
+$("entry-form").addEventListener("submit", async function(e){
   e.preventDefault();
   const name = $("student-name").value.trim();
   const err = $("entry-err"); err.style.display="none";
   if(name.length < 3){ err.textContent = "Please enter your full name."; err.style.display="block"; return; }
 
   const key = studentKey(name);
-  const prev = getResults().find(r => r.key === key);
-  if(prev){
-    err.innerHTML = "⛔ <b>" + name + "</b> has already taken this test - Status: <b>" + prev.status + "</b>, Score: <b>" + prev.score + "/100</b> (" + prev.date + ").<br>One-time policy: a second attempt is not allowed. If there is an issue, please contact the admin.";
-    err.style.display="block"; return;
+  function showPrev(p){
+    err.innerHTML = "⛔ <b>" + name + "</b> has already taken this test - Status: <b>" + p.status + "</b>, Score: <b>" + p.score + "/100</b> (" + p.date + ").<br>One-time policy: a second attempt is not allowed. If there is an issue, please contact the admin.";
+    err.style.display="block";
   }
+  const prev = getResults().find(r => r.key === key);
+  if(prev){ showPrev(prev); return; }
+  // Central check: has this student already taken the test on ANY device?
+  const btn = $("entry-form").querySelector("button[type=submit]");
+  const oldBtnText = btn ? btn.textContent : "";
+  if(btn){ btn.disabled = true; btn.textContent = "Checking..."; }
+  let remoteRec = null;
+  try {
+    const resp = await fetch(CONFIG.API + "?action=check&key=" + encodeURIComponent(key));
+    if(resp.ok){ const d = await resp.json(); if(d.exists) remoteRec = d.record; }
+  } catch(e2){ /* offline / API down: local check above still applies */ }
+  if(btn){ btn.disabled = false; btn.textContent = oldBtnText; }
+  if(remoteRec){ showPrev(remoteRec); return; }
   if(!confirm("You are about to start the test.\n\n• 100 MCQs, 100 Minutes\n• Tab/page change or close = TEST CANCELLED\n• This test can be taken ONLY ONCE\n\nPress OK to start the test in FULL SCREEN.")) return;
   startTest(name, key);
 });
@@ -123,7 +135,14 @@ function scoreNow(){
   state.questions.forEach(q=>{ if(state.answers[q.id]===q.answer) correct++; });
   return correct;
 }
-function persistResult(status, reason){
+function remoteSave(rec, useBeacon){
+  try {
+    const payload = JSON.stringify({ action: "save", record: rec });
+    if(useBeacon && navigator.sendBeacon){ navigator.sendBeacon(CONFIG.API, new Blob([payload], { type: "application/json" })); return; }
+    fetch(CONFIG.API, { method: "POST", headers: { "Content-Type": "application/json" }, body: payload, keepalive: true }).catch(function(){});
+  } catch(e){}
+}
+function persistResult(status, reason, useBeacon){
   const correct = scoreNow();
   const usedSec = CONFIG.DURATION_MINUTES*60 - state.left;
   const rec = {
@@ -137,6 +156,7 @@ function persistResult(status, reason){
   };
   const all = getResults(); all.push(rec); saveResults(all);
   localStorage.removeItem(CONFIG.ACTIVE_KEY);
+  remoteSave(rec, useBeacon);
   return rec;
 }
 function cleanup(){
@@ -208,7 +228,7 @@ window.addEventListener("beforeunload", function(e){
 window.addEventListener("pagehide", function(){
   if(state && !state.finished){
     // Page is closing - the cancellation record must be saved (synchronous localStorage)
-    try { persistResult("Cancelled", "Page / browser was closed"); state.finished = true; } catch(e){}
+    try { persistResult("Cancelled", "Page / browser was closed", true); state.finished = true; } catch(e){}
   }
 });
 document.addEventListener("contextmenu", function(e){ if(state && !state.finished) e.preventDefault(); });
