@@ -7,18 +7,31 @@ function saveResults(r){ localStorage.setItem(CONFIG.RESULTS_KEY, JSON.stringify
 function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
 
 let currentList = [];
+let remoteCache = null; // null = central list not loaded yet / unavailable (local fallback)
+function adminPw(){ return sessionStorage.getItem("stc_admin_pw") || ""; }
+function sourceResults(){ return remoteCache !== null ? remoteCache : getResults(); }
+async function loadRemote(){
+  const pw = adminPw(); if(!pw) return;
+  try {
+    const resp = await fetch(CONFIG.API + "?action=list&pw=" + encodeURIComponent(pw));
+    if(resp.ok){ const d = await resp.json(); remoteCache = d.results || []; render(); }
+  } catch(e){ /* keep local fallback */ }
+}
+async function apiPost(body){
+  try { await fetch(CONFIG.API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }); } catch(e){}
+}
 if(sessionStorage.getItem("stc_admin")==="1"){ showPanel(); }
 $("login-form").addEventListener("submit", function(e){
   e.preventDefault();
   if($("admin-pass").value === CONFIG.ADMIN_PASSWORD){
-    sessionStorage.setItem("stc_admin","1"); showPanel();
+    sessionStorage.setItem("stc_admin","1"); sessionStorage.setItem("stc_admin_pw", $("admin-pass").value); showPanel();
   } else {
     const er=$("login-err"); er.textContent="⛔ Incorrect password. Please try again."; er.style.display="block";
   }
 });
-$("btn-logout") && $("btn-logout").addEventListener("click", function(){ sessionStorage.removeItem("stc_admin"); location.reload(); });
+$("btn-logout") && $("btn-logout").addEventListener("click", function(){ sessionStorage.removeItem("stc_admin"); sessionStorage.removeItem("stc_admin_pw"); location.reload(); });
 
-function showPanel(){ $("admin-login").classList.add("hidden"); $("admin-panel").classList.remove("hidden"); render(); }
+function showPanel(){ $("admin-login").classList.add("hidden"); $("admin-panel").classList.remove("hidden"); render(); loadRemote(); }
 function isPass(r){ return r.status==="Completed" && r.percent >= CONFIG.PASS_PERCENT; }
 function gradeOf(r){
   if(r.status!=="Completed") return {g:"—", cls:"gx"};
@@ -40,8 +53,8 @@ function positionMap(all){
 function render(){
   const q = ($("search").value||"").toLowerCase();
   const f = $("filter-status").value;
-  const all = getResults();
-  // Stats (sab par)
+  const all = sourceResults();
+  // Stats (over all results)
   $("st-total").textContent = all.length;
   $("st-completed").textContent = all.filter(r=>r.status==="Completed").length;
   $("st-cancelled").textContent = all.filter(r=>r.status==="Cancelled").length;
@@ -82,17 +95,22 @@ $("search").addEventListener("input", render);
 $("filter-status").addEventListener("change", render);
 
 // Delete one (retake allow)
-function delRecord(r){
+async function delRecord(r){
   if(!confirm("Delete the result of '" + r.name + "'?\nAfter this, the student will be able to take the test AGAIN.")) return;
   saveResults(getResults().filter(x => !(x.key===r.key && x.date===r.date)));
+  if(remoteCache !== null){ remoteCache = remoteCache.filter(x => x.key !== r.key); }
   render();
+  await apiPost({ action: "delete", key: r.key, pw: adminPw() });
+  loadRemote();
 }
 // Clear all
-$("btn-clear").addEventListener("click", function(){
-  if(!getResults().length) return;
+$("btn-clear").addEventListener("click", async function(){
+  if(!sourceResults().length) return;
   if(!confirm("Delete ALL results? They cannot be recovered.\nIt is better to save the CSV/PDF first.")) return;
   if(!confirm("Are you sure? ALL student records will be deleted.")) return;
-  saveResults([]); render();
+  saveResults([]); remoteCache = []; render();
+  await apiPost({ action: "clear", pw: adminPw() });
+  loadRemote();
 });
 
 // Print All / PDF All -> print view (browser: Save as PDF)
@@ -105,7 +123,7 @@ $("btn-pdf-all").addEventListener("click", function(){
 
 // CSV / Excel export
 $("btn-csv").addEventListener("click", function(){
-  const all = getResults();
+  const all = sourceResults();
   if(!all.length){ alert("There are no results to export."); return; }
   let csv = "S.No,Student Name,Marks Obtained,Total Marks,Percent,Grade,Position,Result,Status,Reason,Answered,Time Used,Date\n";
   all.forEach(function(r,i){
