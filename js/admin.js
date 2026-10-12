@@ -8,7 +8,7 @@ function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g, c=>({"&":"&amp;
 
 let currentList = [];
 let remoteCache = null; // null = central list not loaded yet / unavailable (local fallback)
-function adminPw(){ return sessionStorage.getItem("stc_admin_pw") || ""; }
+function adminPw(){ return sessionStorage.getItem("stc_admin_pw") || CONFIG.ADMIN_PASSWORD; }
 function sourceResults(){ return remoteCache !== null ? remoteCache : getResults(); }
 async function fetchCentralList(pw){
   const resp = await fetch(CONFIG.API + "?action=list&pw=" + encodeURIComponent(pw));
@@ -17,10 +17,10 @@ async function fetchCentralList(pw){
   return d.results || [];
 }
 async function loadRemote(){
-  const pw = adminPw(); if(!pw) return;
+  const pw = adminPw(); if(!pw) return null;
   try {
     let list = await fetchCentralList(pw);
-    if(list === null) return;
+    if(list === null) return null;
     remoteCache = list; render();
     // Migrate results stored locally on THIS device (old system) into the central database
     const centralKeys = new Set(list.map(r => r.key));
@@ -30,8 +30,26 @@ async function loadRemote(){
       const updated = await fetchCentralList(pw);
       if(updated !== null){ remoteCache = updated; render(); }
     }
-  } catch(e){ /* keep local fallback */ }
+    return { total: remoteCache.length, migrated: locals.length };
+  } catch(e){ return null; /* keep local fallback */ }
 }
+// Retrieve Data button: fetch everything from the central database into this panel
+$("btn-retrieve") && $("btn-retrieve").addEventListener("click", async function(){
+  const btn = $("btn-retrieve"), st = $("retrieve-status");
+  const oldText = btn.textContent;
+  btn.disabled = true; btn.textContent = "↻ Retrieving...";
+  const res = await loadRemote();
+  btn.disabled = false; btn.textContent = oldText;
+  st.classList.remove("hidden");
+  if(res){
+    st.style.background = "#e7f8f0"; st.style.color = "#0b7a55";
+    st.textContent = "✓ Data retrieved successfully — Total results in central database: " + res.total + (res.migrated ? " (" + res.migrated + " old result(s) from this device were also saved into the central database)" : "");
+  } else {
+    st.style.background = "#fdecec"; st.style.color = "#b42318";
+    st.textContent = "⚠ Could not retrieve from the central database. Please check the internet connection and try again. Showing this device's local results for now.";
+    render();
+  }
+});
 async function apiPost(body){
   try { await fetch(CONFIG.API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }); } catch(e){}
 }
