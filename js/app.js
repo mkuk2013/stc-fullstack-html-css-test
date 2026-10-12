@@ -26,19 +26,27 @@ $("entry-form").addEventListener("submit", async function(e){
     err.innerHTML = "⛔ <b>" + name + "</b> has already taken this test - Status: <b>" + p.status + "</b>, Score: <b>" + p.score + "/100</b> (" + p.date + ").<br>One-time policy: a second attempt is not allowed. If there is an issue, please contact the admin.";
     err.style.display="block";
   }
-  const prev = getResults().find(r => r.key === key);
-  if(prev){ showPrev(prev); return; }
-  // Central check: has this student already taken the test on ANY device?
+  // Central check FIRST: the central database is the authority.
+  // Admin ne record delete kar diya ho to student dobara test de sakta hai -
+  // us ke apne device par pari purani local copy usay block nahi karegi.
   const btn = $("entry-form").querySelector("button[type=submit]");
   const oldBtnText = btn ? btn.textContent : "";
   if(btn){ btn.disabled = true; btn.textContent = "Checking..."; }
-  let remoteRec = null;
+  let remoteRec = null, apiOk = false;
   try {
     const resp = await fetch(CONFIG.API + "?action=check&key=" + encodeURIComponent(key));
-    if(resp.ok){ const d = await resp.json(); if(d.exists) remoteRec = d.record; }
-  } catch(e2){ /* offline / API down: local check above still applies */ }
+    if(resp.ok){ apiOk = true; const d = await resp.json(); if(d.exists) remoteRec = d.record; }
+  } catch(e2){ /* offline / API down: neeche local check lagega */ }
   if(btn){ btn.disabled = false; btn.textContent = oldBtnText; }
   if(remoteRec){ showPrev(remoteRec); return; }
+  if(apiOk){
+    // Server par is naam ka koi record nahi: local copy stale hai (admin ne delete ki thi) - saaf kar do
+    saveResults(getResults().filter(r => r.key !== key));
+  } else {
+    // Server se rabta nahi hua: is device ke local record se check karo (offline / lab mode)
+    const prev = getResults().find(r => r.key === key);
+    if(prev){ showPrev(prev); return; }
+  }
   if(!confirm("You are about to start the test.\n\n• 100 MCQs, 100 Minutes\n• Tab/page change or close = TEST CANCELLED\n• This test can be taken ONLY ONCE\n\nPress OK to start the test in FULL SCREEN.")) return;
   startTest(name, key);
 });
