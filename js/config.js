@@ -8,6 +8,7 @@ const CONFIG = {
   DURATION_MINUTES: 100,
   PASS_PERCENT: 40,
   ADMIN_PASSWORD: "STC@Admin2026",
+  API: "/api/results",
   RESULTS_KEY: "stc_fs_results_v1",
   ACTIVE_KEY: "stc_fs_active_v1"
 };
