@@ -20,7 +20,7 @@ function json(data, status) {
 }
 
 export default async (req) => {
-  const store = getStore(STORE_NAME);
+  const store = getStore({ name: STORE_NAME, consistency: "strong" });
   const url = new URL(req.url);
   const action = url.searchParams.get("action") || "";
   try {
