@@ -10,11 +10,26 @@ let currentList = [];
 let remoteCache = null; // null = central list not loaded yet / unavailable (local fallback)
 function adminPw(){ return sessionStorage.getItem("stc_admin_pw") || ""; }
 function sourceResults(){ return remoteCache !== null ? remoteCache : getResults(); }
+async function fetchCentralList(pw){
+  const resp = await fetch(CONFIG.API + "?action=list&pw=" + encodeURIComponent(pw));
+  if(!resp.ok) return null;
+  const d = await resp.json();
+  return d.results || [];
+}
 async function loadRemote(){
   const pw = adminPw(); if(!pw) return;
   try {
-    const resp = await fetch(CONFIG.API + "?action=list&pw=" + encodeURIComponent(pw));
-    if(resp.ok){ const d = await resp.json(); remoteCache = d.results || []; render(); }
+    let list = await fetchCentralList(pw);
+    if(list === null) return;
+    remoteCache = list; render();
+    // Migrate results stored locally on THIS device (old system) into the central database
+    const centralKeys = new Set(list.map(r => r.key));
+    const locals = getResults().filter(r => !centralKeys.has(r.key));
+    for(const rec of locals){ await apiPost({ action: "save", record: rec }); }
+    if(locals.length){
+      const updated = await fetchCentralList(pw);
+      if(updated !== null){ remoteCache = updated; render(); }
+    }
   } catch(e){ /* keep local fallback */ }
 }
 async function apiPost(body){
