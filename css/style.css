@@ -180,7 +180,9 @@ footer a{color:#a9c6e2} footer a:hover{color:#fff}
 .panel-card{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:24px}
 .toolbar{display:flex;gap:9px;flex-wrap:wrap;margin:16px 0;align-items:center}
 .toolbar input,.toolbar select{padding:11px 13px;border:1.6px solid #c3d5e8;border-radius:10px;font-size:14px;width:auto}
-.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:13px}
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:13px}
+#print-area{min-width:0}
+.sheet-title{min-width:0}
 table{width:100%;border-collapse:collapse;font-size:13.5px}
 th{background:var(--navy);color:#fff;padding:12px 10px;text-align:left;white-space:nowrap;font-family:'Poppins';font-size:12.5px;letter-spacing:.3px}
 td{padding:10px;border-bottom:1px solid #e6eef6;vertical-align:top}
@@ -207,6 +209,29 @@ tr:hover td{background:#eef5fd}
   .palette{grid-template-columns:repeat(10,1fr);max-height:none}
 }
 @media(max-width:560px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.palette{grid-template-columns:repeat(5,1fr)}.hero-grid h1{font-size:26px}.q-text{font-size:17px}}
+/* ---- Admin panel: mobile responsiveness ---- */
+@media(max-width:640px){
+  .admin-shell{padding:16px 10px 30px}
+  .panel-card{padding:14px 12px;border-radius:14px}
+  .sheet-head{padding:12px 10px 10px;border-radius:12px}
+  .sheet-head-top{gap:8px}
+  .sheet-head-top img{width:42px;height:42px}
+  .sheet-logo-r{display:none}
+  .sheet-title h2{font-size:16px;line-height:1.25}
+  .sheet-sub{font-size:10.5px;line-height:1.5}
+  .sheet-band{font-size:11.5px;letter-spacing:1.6px;padding:6px;margin-top:9px}
+  .sheet-meta{font-size:11px;gap:4px 12px;margin-top:8px}
+  .kpi{padding:11px}
+  .kpi b{font-size:20px}
+  .toolbar{gap:7px}
+  .toolbar .btn.small{flex:1 1 46%;padding:10px 8px;font-size:12.5px}
+  .toolbar input,.toolbar select{flex:1 1 100%}
+  table{font-size:12.5px}
+  th,td{padding:8px 7px}
+  .login-card{margin:18px auto;padding:24px 18px}
+  .brand .b1{font-size:15px}
+  .brand img{width:42px;height:42px}
+}
 
 .print-sign{display:none}
 #student-print-area{display:none}
