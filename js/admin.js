@@ -64,7 +64,33 @@ $("login-form").addEventListener("submit", function(e){
 });
 $("btn-logout") && $("btn-logout").addEventListener("click", function(){ sessionStorage.removeItem("stc_admin"); sessionStorage.removeItem("stc_admin_pw"); location.reload(); });
 
-function showPanel(){ $("admin-login").classList.add("hidden"); $("admin-panel").classList.remove("hidden"); render(); loadRemote(); }
+function showPanel(){ $("admin-login").classList.add("hidden"); $("admin-panel").classList.remove("hidden"); render(); loadRemote(); loadTestStatus(); }
+function setToggleUI(open){
+  const t = $("test-toggle"); if(t) t.checked = open;
+  const tx = $("test-status-text");
+  if(tx){ tx.textContent = open ? "🟢 Test is OPEN — students can take the test right now." : "🔴 Test is CLOSED — students cannot take the test."; tx.style.color = open ? "#0b7a55" : "#b42318"; }
+}
+async function loadTestStatus(){
+  try {
+    const r = await fetch(CONFIG.API + "?action=status");
+    if(r.ok){ const d = await r.json(); setToggleUI(!!d.open); return; }
+  } catch(e){}
+  const tx = $("test-status-text"); if(tx) tx.textContent = "Could not load the test status — check the internet connection.";
+}
+$("test-toggle") && $("test-toggle").addEventListener("change", async function(){
+  const open = $("test-toggle").checked;
+  const msg = open ? "OPEN the test for students?\nStudents will be able to start the test immediately." : "CLOSE the test for students?\nNo student will be able to start the test.";
+  if(!confirm(msg)){ setToggleUI(!open); return; }
+  const tx = $("test-status-text"); if(tx) tx.textContent = "Saving...";
+  try {
+    const resp = await fetch(CONFIG.API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "set-status", open: open, pw: adminPw() }) });
+    if(!resp.ok) throw new Error("failed");
+    setToggleUI(open);
+  } catch(e){
+    setToggleUI(!open);
+    alert("Status change failed. Please check the internet connection and try again.");
+  }
+});
 function isPass(r){ return r.status==="Completed" && r.percent >= CONFIG.PASS_PERCENT; }
 function gradeOf(r){
   if(r.status!=="Completed") return {g:"—", cls:"gx"};
