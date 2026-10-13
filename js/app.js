@@ -15,11 +15,17 @@ function shuffle(arr){ const a = arr.slice(); for(let i=a.length-1;i>0;i--){ con
 function show(view){ ["view-home","view-test","view-result","view-cancelled"].forEach(v=>$(v).classList.toggle("hidden", v!==view)); window.scrollTo(0,0); }
 
 // ---------- Test open/closed ----------
-if(CONFIG.TEST_OPEN === false){
-  const ef = $("entry-form"); if(ef) ef.classList.add("hidden");
-  const tc = $("test-closed"); if(tc) tc.classList.remove("hidden");
-  const sn = document.querySelector(".secure-note"); if(sn) sn.classList.add("hidden");
+let testOpen = CONFIG.TEST_OPEN !== false;
+function applyTestOpenUI(){
+  const ef = $("entry-form"); if(ef) ef.classList.toggle("hidden", !testOpen);
+  const tc = $("test-closed"); if(tc) tc.classList.toggle("hidden", testOpen);
+  const sn = document.querySelector(".secure-note"); if(sn) sn.classList.toggle("hidden", !testOpen);
 }
+applyTestOpenUI();
+// Live status from the central server (admin controls it from the panel toggle)
+fetch(CONFIG.API + "?action=status").then(function(r){ return r.ok ? r.json() : null; }).then(function(d){
+  if(d && typeof d.open === "boolean"){ testOpen = d.open; applyTestOpenUI(); }
+}).catch(function(){});
 
 // ---------- Entry ----------
 $("entry-form").addEventListener("submit", async function(e){
@@ -28,7 +34,7 @@ $("entry-form").addEventListener("submit", async function(e){
   const err = $("entry-err"); err.style.display="none";
   if(name.length < 3){ err.textContent = "Please enter your full name."; err.style.display="block"; return; }
 
-  if(CONFIG.TEST_OPEN === false){ err.textContent = "This test is now CLOSED."; err.style.display="block"; return; }
+  if(!testOpen){ err.textContent = "This test is now CLOSED."; err.style.display="block"; return; }
   const key = studentKey(name);
   function showPrev(p){
     err.innerHTML = "⛔ <b>" + name + "</b> has already taken this test - Status: <b>" + p.status + "</b>, Score: <b>" + p.score + "/100</b> (" + p.date + ").<br>One-time policy: a second attempt is not allowed. If there is an issue, please contact the admin.";
