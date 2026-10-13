@@ -24,6 +24,10 @@ export default async (req) => {
   const url = new URL(req.url);
   const action = url.searchParams.get("action") || "";
   try {
+    if (req.method === "GET" && action === "status") {
+      const st = await store.get("__settings__", { type: "json" }).catch(() => null);
+      return json({ open: !!(st && st.open === true) });
+    }
     if (req.method === "GET" && action === "check") {
       const key = url.searchParams.get("key") || "";
       if (!key) return json({ exists: false });
@@ -38,6 +42,7 @@ export default async (req) => {
       const { blobs } = await store.list();
       const out = [];
       for (const b of blobs) {
+        if (b.key === "__settings__") continue;
         const r = await store.get(b.key, { type: "json" }).catch(() => null);
         if (r) out.push(r);
       }
@@ -56,6 +61,11 @@ export default async (req) => {
         await store.setJSON(enc(rec.key), rec);
         return json({ ok: true });
       }
+      if (act === "set-status") {
+        if (body.pw !== adminPw()) return json({ error: "unauthorized" }, 401);
+        await store.setJSON("__settings__", { open: body.open === true, ts: Date.now() });
+        return json({ ok: true, open: body.open === true });
+      }
       if (act === "delete") {
         if (body.pw !== adminPw()) return json({ error: "unauthorized" }, 401);
         if (body.key) await store.delete(enc(body.key));
@@ -64,8 +74,9 @@ export default async (req) => {
       if (act === "clear") {
         if (body.pw !== adminPw()) return json({ error: "unauthorized" }, 401);
         const { blobs } = await store.list();
-        for (const b of blobs) await store.delete(b.key);
-        return json({ ok: true, deleted: blobs.length });
+        let n = 0;
+        for (const b of blobs) { if (b.key !== "__settings__") { await store.delete(b.key); n++; } }
+        return json({ ok: true, deleted: n });
       }
       return json({ error: "unknown action" }, 400);
     }
