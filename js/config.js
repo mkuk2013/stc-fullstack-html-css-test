@@ -7,6 +7,7 @@ const CONFIG = {
   TOTAL_QUESTIONS: 100,
   DURATION_MINUTES: 100,
   PASS_PERCENT: 40,
+  TEST_OPEN: false, // false = students cannot start the test (admin panel keeps working)
   ADMIN_PASSWORD: "STC@Admin2026",
   API: "/api/results",
   RESULTS_KEY: "stc_fs_results_v1",
