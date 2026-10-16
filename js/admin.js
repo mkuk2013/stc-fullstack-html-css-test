@@ -8,7 +8,7 @@ function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g, c=>({"&":"&amp;
 
 let currentList = [];
 let remoteCache = null; // null = central list not loaded yet / unavailable (local fallback)
-function adminPw(){ return sessionStorage.getItem("stc_admin_pw") || CONFIG.ADMIN_PASSWORD; }
+function adminPw(){ return sessionStorage.getItem("stc_admin_pw") || ""; }
 function sourceResults(){ return remoteCache !== null ? remoteCache : getResults(); }
 async function fetchCentralList(pw){
   const resp = await fetch(CONFIG.API + "?action=list&pw=" + encodeURIComponent(pw));
@@ -54,12 +54,19 @@ async function apiPost(body){
   try { await fetch(CONFIG.API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }); } catch(e){}
 }
 if(sessionStorage.getItem("stc_admin")==="1"){ showPanel(); }
-$("login-form").addEventListener("submit", function(e){
+$("login-form").addEventListener("submit", async function(e){
   e.preventDefault();
-  if($("admin-pass").value === CONFIG.ADMIN_PASSWORD){
-    sessionStorage.setItem("stc_admin","1"); sessionStorage.setItem("stc_admin_pw", $("admin-pass").value); showPanel();
-  } else {
-    const er=$("login-err"); er.textContent="⛔ Incorrect password. Please try again."; er.style.display="block";
+  const pw = $("admin-pass").value;
+  const er = $("login-err");
+  try {
+    const resp = await fetch(CONFIG.API + "?action=verify&pw=" + encodeURIComponent(pw));
+    if (resp.ok){
+      sessionStorage.setItem("stc_admin","1"); sessionStorage.setItem("stc_admin_pw", pw); showPanel();
+    } else {
+      er.textContent = "\u26D4 Incorrect password. Please try again."; er.style.display = "block";
+    }
+  } catch(ex){
+    er.textContent = "Could not verify with the server. Check the internet connection and try again."; er.style.display = "block";
   }
 });
 $("btn-logout") && $("btn-logout").addEventListener("click", function(){ sessionStorage.removeItem("stc_admin"); sessionStorage.removeItem("stc_admin_pw"); location.reload(); });

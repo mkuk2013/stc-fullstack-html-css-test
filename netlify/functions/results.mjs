@@ -8,8 +8,7 @@
 import { getStore } from "@netlify/blobs";
 
 const STORE_NAME = "stc-results";
-const FALLBACK_PW = "STC@Admin2026"; // overridden by the ADMIN_PASSWORD environment variable
-const adminPw = () => process.env.ADMIN_PASSWORD || FALLBACK_PW;
+const adminPw = () => process.env.ADMIN_PASSWORD || ""; // fail-closed: no env var set = no admin access
 const enc = (k) => encodeURIComponent(String(k || ""));
 
 function json(data, status) {
@@ -27,6 +26,10 @@ export default async (req) => {
     if (req.method === "GET" && action === "status") {
       const st = await store.get("__settings__", { type: "json" }).catch(() => null);
       return json({ open: !!(st && st.open === true) });
+    }
+    if (req.method === "GET" && action === "verify") {
+      if (!adminPw() || (url.searchParams.get("pw") || "") !== adminPw()) return json({ error: "unauthorized" }, 401);
+      return json({ ok: true });
     }
     if (req.method === "GET" && action === "check") {
       const key = url.searchParams.get("key") || "";
