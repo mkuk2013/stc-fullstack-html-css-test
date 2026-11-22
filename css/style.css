@@ -234,6 +234,15 @@ tr:hover td{background:#eef5fd}
 }
 
 .print-sign{display:none}
+.sec-pick{display:flex;flex-direction:column;gap:8px}
+.sec-opt{display:flex;gap:10px;align-items:flex-start;border:1.5px solid #c3d5e8;border-radius:12px;padding:10px 12px;cursor:pointer;background:#f8fbff;transition:.15s}
+.sec-opt:hover{border-color:var(--navy)}
+.sec-opt input{margin-top:3px;accent-color:var(--navy);width:17px;height:17px;flex:0 0 auto}
+.sec-opt span{display:flex;flex-direction:column}
+.sec-opt b{color:var(--navy);font-size:14.5px}
+.sec-opt small{color:var(--muted);font-size:12px}
+.sec-opt:has(input:checked){border-color:var(--navy);background:#eaf2fb;box-shadow:0 0 0 2px rgba(10,37,64,.12)}
+.syl-head.js{background:linear-gradient(90deg,#8a6d00,#b8860b)}
 .test-toggle-card{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px 20px;margin-bottom:16px}
 .switch{position:relative;display:inline-block;width:64px;height:34px;flex:0 0 auto}
 .switch input{opacity:0;width:0;height:0}
