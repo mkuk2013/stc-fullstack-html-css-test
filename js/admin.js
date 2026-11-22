@@ -134,20 +134,24 @@ function render(){
   const f = $("filter-status").value;
   const fs = $("filter-section") ? $("filter-section").value : "";
   const all = sourceResults();
-  // Stats (over all results)
-  $("st-total").textContent = all.length;
-  $("st-completed").textContent = all.filter(r=>r.status==="Completed").length;
-  $("st-cancelled").textContent = all.filter(r=>r.status==="Cancelled").length;
-  $("st-pass").textContent = all.filter(isPass).length;
-  $("st-avg").textContent = all.length ? Math.round(all.reduce((s,r)=>s+r.percent,0)/all.length) + "%" : "0%";
-  $("st-high").textContent = all.length ? Math.max.apply(null, all.map(r=>r.score)) : 0;
+  // Stats (over the selected section scope - default: new sections only)
+  const scopeForStats = all.filter(r => { const fsx = $("filter-section") ? $("filter-section").value : ""; return fsx==="all" ? true : fsx ? (r.section || "legacy")===fsx : !!r.section; });
+  $("st-total").textContent = scopeForStats.length;
+  $("st-completed").textContent = scopeForStats.filter(r=>r.status==="Completed").length;
+  $("st-cancelled").textContent = scopeForStats.filter(r=>r.status==="Cancelled").length;
+  $("st-pass").textContent = scopeForStats.filter(isPass).length;
+  $("st-avg").textContent = scopeForStats.length ? Math.round(scopeForStats.reduce((s,r)=>s+r.percent,0)/scopeForStats.length) + "%" : "0%";
+  $("st-high").textContent = scopeForStats.length ? Math.max.apply(null, scopeForStats.map(r=>r.score)) : 0;
   $("print-date").textContent = "Printed on: " + new Date().toLocaleString("en-GB",{timeZone:"Asia/Karachi"});
-  $("print-summary").textContent = "Total Students: " + all.length + "  •  Completed: " + all.filter(r=>r.status==="Completed").length + "  •  Cancelled: " + all.filter(r=>r.status==="Cancelled").length + "  •  Pass: " + all.filter(isPass).length;
+  $("print-summary").textContent = "Total Students: " + scopeForStats.length + "  •  Completed: " + scopeForStats.filter(r=>r.status==="Completed").length + "  •  Cancelled: " + scopeForStats.filter(r=>r.status==="Cancelled").length + "  •  Pass: " + scopeForStats.filter(isPass).length;
 
-  const posMap = positionMap(all);
-  currentList = all.filter(r => (!f || r.status===f) && (!fs || (r.section || "legacy")===fs) && (!q || r.name.toLowerCase().includes(q) || (r.roll||"").toLowerCase().includes(q)));
+  // Section scope: by default ONLY the new 3-section results are shown.
+  // Purane (Old Test) results sirf apne alag filter par nazar ate hain - naye sections mein mix nahi hote.
+  const scoped = all.filter(r => fs==="all" ? true : fs ? (r.section || "legacy")===fs : !!r.section);
+  const posMap = positionMap(scoped);
+  currentList = scoped.filter(r => (!f || r.status===f) && (!q || r.name.toLowerCase().includes(q) || (r.roll||"").toLowerCase().includes(q)));
   const tb = $("results-body"); tb.innerHTML="";
-  $("no-results").classList.toggle("hidden", all.length>0);
+  $("no-results").classList.toggle("hidden", scoped.length>0);
   currentList.forEach(function(r, i){
     const tr = document.createElement("tr");
     const pass = isPass(r);

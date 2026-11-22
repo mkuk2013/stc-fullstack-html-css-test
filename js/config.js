@@ -3,7 +3,7 @@
 const CONFIG = {
   INSTITUTE: "Super Sys-Tech Computers Centre",
   CITY: "Umerkot",
-  COURSE: "Full Stack Web Development Test (HTML + CSS)",
+  COURSE: "Full Stack Web Development Test",
   TOTAL_QUESTIONS: 50,
   DURATION_MINUTES: 50,
   SECTIONS: [

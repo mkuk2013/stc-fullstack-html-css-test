@@ -1,4 +1,4 @@
-// ===== Full Stack Web Development Test (HTML + CSS) - Student App =====
+// ===== Full Stack Web Development Test (3 Sections) - Student App =====
 (function(){
 "use strict";
 const $ = id => document.getElementById(id);
@@ -202,7 +202,7 @@ function buildStudentSlip(){
   "<div class='slip' style='background:#fff;padding:10px'>" +
     "<div class='slip-head'><img src='assets/logo.png'><h2 style='color:var(--navy)'>Super Sys-Tech Computers Centre, Umerkot</h2>" +
     "<div style='font-size:12.5px;color:#5b7186'>1st Floor, Jameel Market, Umerkot &bull; 0332-3350790 | 0345-3279790 &bull; stc.edu.pk</div>" +
-    "<h3 style='margin-top:10px;letter-spacing:2px'>RESULT SLIP</h3><div style='font-weight:700'>Full Stack Web Development Test (HTML + CSS)</div></div>" +
+    "<h3 style='margin-top:10px;letter-spacing:2px'>RESULT SLIP</h3><div style='font-weight:700'>Full Stack Web Development Test</div></div>" +
     "<table><tbody>" +
     "<tr><td>Student Name</td><td><b>" + escHtml(rec.name) + "</b></td></tr>" +
     "<tr><td>Section</td><td><b>" + escHtml(rec.sectionName || rec.section || "-") + "</b></td></tr>" +

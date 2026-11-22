@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Panel - Full Stack Web Development Test (HTML + CSS) - STC Umerkot</title>
+<title>Admin Panel - Full Stack Web Development Test (3 Sections) - STC Umerkot</title>
 <link rel="icon" href="assets/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
@@ -33,7 +33,7 @@
     <div style="text-align:center">
       <img src="assets/logo.png" style="width:92px;height:92px;object-fit:contain" alt="STC">
       <h2 style="color:var(--navy);margin:12px 0 4px;font-size:23px">Admin Login</h2>
-      <p style="color:var(--muted);font-size:13.5px">Full Stack Web Development Test (HTML + CSS)<br>For the institute admin / teacher only</p>
+      <p style="color:var(--muted);font-size:13.5px">Full Stack Web Development Test (3 Sections)<br>For the institute admin / teacher only</p>
     </div>
     <form id="login-form">
       <div class="field"><label for="admin-pass">Admin Password</label>
@@ -95,11 +95,12 @@
             <option>Cancelled</option>
           </select>
           <select id="filter-section" style="width:auto">
-            <option value="">All Sections</option>
-            <option value="basic">Basic</option>
-            <option value="htmlcss">HTML + CSS</option>
-            <option value="advanced">Advanced</option>
-            <option value="legacy">Old Test (100 MCQ)</option>
+            <option value="">All New Sections</option>
+            <option value="basic">Section 1 — Basic</option>
+            <option value="htmlcss">Section 2 — HTML + CSS</option>
+            <option value="advanced">Section 3 — Advanced</option>
+            <option value="legacy">Old Test (100 MCQ) — Purana</option>
+            <option value="all">Sab (New + Old)</option>
           </select>
           <button class="btn small" id="btn-retrieve" type="button" style="background:linear-gradient(180deg,#7c3aed,#5b21b6);box-shadow:0 8px 20px rgba(124,58,237,.28)">↻ Retrieve Data</button>
           <button class="btn small green" id="btn-pdf-all" type="button">⬇ Download Combined PDF — All Students</button>
