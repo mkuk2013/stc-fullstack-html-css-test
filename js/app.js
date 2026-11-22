@@ -28,16 +28,22 @@ fetch(CONFIG.API + "?action=status").then(function(r){ return r.ok ? r.json() : 
 }).catch(function(){});
 
 // ---------- Entry ----------
+function sectionOf(id){ return CONFIG.SECTIONS.find(function(x){ return x.id === id; }) || CONFIG.SECTIONS[0]; }
 $("entry-form").addEventListener("submit", async function(e){
   e.preventDefault();
   const name = $("student-name").value.trim();
+  const roll = $("student-roll").value.trim();
+  const secEl = document.querySelector('input[name="section"]:checked');
   const err = $("entry-err"); err.style.display="none";
+  if(!secEl){ err.textContent = "Please select your section first."; err.style.display="block"; return; }
   if(name.length < 3){ err.textContent = "Please enter your full name."; err.style.display="block"; return; }
+  if(!roll){ err.textContent = "Please enter your Roll No."; err.style.display="block"; return; }
+  const section = sectionOf(secEl.value);
 
   if(!testOpen){ err.textContent = "This test is now CLOSED."; err.style.display="block"; return; }
-  const key = studentKey(name);
+  const key = section.id + "|" + studentKey(roll);
   function showPrev(p){
-    err.innerHTML = "⛔ <b>" + name + "</b> has already taken this test - Status: <b>" + p.status + "</b>, Score: <b>" + p.score + "/100</b> (" + p.date + ").<br>One-time policy: a second attempt is not allowed. If there is an issue, please contact the admin.";
+    err.innerHTML = "⛔ <b>" + name + "</b> (Roll No " + roll + ") has already taken the <b>" + section.name + "</b> section - Status: <b>" + p.status + "</b>, Score: <b>" + p.score + "/" + (p.total || 50) + "</b> (" + p.date + ").<br>One-time policy: a second attempt in the same section is not allowed. The other sections can still be attempted. If there is an issue, please contact the admin.";
     err.style.display="block";
   }
   // Central check FIRST: the central database is the authority.
@@ -61,14 +67,14 @@ $("entry-form").addEventListener("submit", async function(e){
     const prev = getResults().find(r => r.key === key);
     if(prev){ showPrev(prev); return; }
   }
-  if(!confirm("You are about to start the test.\n\n• 100 MCQs, 100 Minutes\n• Tab/page change or close = TEST CANCELLED\n• This test can be taken ONLY ONCE\n\nPress OK to start the test in FULL SCREEN.")) return;
-  startTest(name, key);
+  if(!confirm("You are about to start the " + section.name + " section.\n\n• 50 MCQs, 50 Minutes\n• Tab/page change or close = TEST CANCELLED\n• This section can be taken ONLY ONCE\n\nPress OK to start the test in FULL SCREEN.")) return;
+  startTest(name, roll, section, key);
 });
 
-function startTest(name, key){
+function startTest(name, roll, section, key){
   state = {
-    name, key,
-    questions: shuffle(QUESTIONS),
+    name, roll, section: section.id, sectionName: section.name, key,
+    questions: shuffle(QUESTION_BANK[section.id] || []),
     answers: {},
     current: 0,
     startedAt: Date.now(),
@@ -79,6 +85,8 @@ function startTest(name, key){
   // Active flag: page close/refresh par cancel record karne ke liye
   localStorage.setItem(CONFIG.ACTIVE_KEY, JSON.stringify({key, name, startedAt: state.startedAt}));
   $("th-name").textContent = name;
+  $("th-roll").textContent = roll;
+  $("th-section").textContent = section.name;
   show("view-test");
   renderQuestion(); buildPalette(); updateProgress(); updateTimerText();
   // Fullscreen
@@ -168,7 +176,7 @@ function persistResult(status, reason, useBeacon){
   const correct = scoreNow();
   const usedSec = CONFIG.DURATION_MINUTES*60 - state.left;
   const rec = {
-    key: state.key, name: state.name,
+    key: state.key, name: state.name, roll: state.roll, section: state.section, sectionName: state.sectionName,
     score: correct, total: state.questions.length, correct: correct,
     wrong: answeredCount()-correct, answered: answeredCount(),
     percent: Math.round(correct/state.questions.length*100),
@@ -200,6 +208,8 @@ function buildStudentSlip(){
     "<h3 style='margin-top:10px;letter-spacing:2px'>RESULT SLIP</h3><div style='font-weight:700'>Full Stack Web Development Test (HTML + CSS)</div></div>" +
     "<table><tbody>" +
     "<tr><td>Student Name</td><td><b>" + escHtml(rec.name) + "</b></td></tr>" +
+    "<tr><td>Roll No</td><td><b>" + escHtml(rec.roll || "-") + "</b></td></tr>" +
+    "<tr><td>Section</td><td><b>" + escHtml(rec.sectionName || rec.section || "-") + "</b></td></tr>" +
     "<tr><td>Marks Obtained</td><td><b>" + rec.score + " / " + rec.total + "</b></td></tr>" +
     "<tr><td>Percentage</td><td><b>" + rec.percent + "%</b></td></tr>" +
     "<tr><td>Grade</td><td><b>" + gradeStr(rec.percent) + "</b></td></tr>" +
@@ -220,6 +230,8 @@ function finishTest(status, reason){
   $("res-correct").textContent = rec.correct;
   $("res-name").textContent = rec.name;
   $("res-time").textContent = rec.timeUsed;
+  $("res-section").textContent = rec.sectionName || "-";
+  $("res-course").textContent = "Full Stack Web Development Test — " + (rec.sectionName || "");
   const pass = rec.percent >= CONFIG.PASS_PERCENT;
   $("score-circle").classList.toggle("fail", !pass);
   $("res-status").innerHTML = pass ? "🎉 <span style='color:var(--green)'>PASS</span>" : "❌ <span style='color:var(--red)'>FAIL</span> - Passing marks: " + CONFIG.PASS_PERCENT + "%";

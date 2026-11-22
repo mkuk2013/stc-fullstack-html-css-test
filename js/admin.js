@@ -109,16 +109,30 @@ function gradeOf(r){
   if(p>=40) return {g:"D", cls:"gd"};
   return {g:"F", cls:"gf"};
 }
+function sectionLabel(r){
+  if(r.sectionName) return r.sectionName;
+  if(r.section==="basic") return "Basic (HTML Only)";
+  if(r.section==="htmlcss") return "HTML + CSS";
+  if(r.section==="advanced") return "Advanced (HTML + CSS + JS)";
+  return "Old Test (100 MCQ)";
+}
 function positionMap(all){
-  const done = all.filter(r=>r.status==="Completed").slice().sort((a,b)=>b.score-a.score);
-  const map = {}; let lastScore=null, lastRank=0;
-  done.forEach(function(r,i){ if(r.score!==lastScore){ lastRank=i+1; lastScore=r.score; } map[r.key+"|"+r.date]=lastRank; });
+  // Merit positions are calculated separately within each section
+  const map = {};
+  const groups = {};
+  all.filter(r=>r.status==="Completed").forEach(function(r){ const g = r.section || "legacy"; (groups[g] = groups[g] || []).push(r); });
+  Object.keys(groups).forEach(function(g){
+    const done = groups[g].slice().sort((a,b)=>b.score-a.score);
+    let lastScore=null, lastRank=0;
+    done.forEach(function(r,i){ if(r.score!==lastScore){ lastRank=i+1; lastScore=r.score; } map[r.key+"|"+r.date]=lastRank; });
+  });
   return map;
 }
 
 function render(){
   const q = ($("search").value||"").toLowerCase();
   const f = $("filter-status").value;
+  const fs = $("filter-section") ? $("filter-section").value : "";
   const all = sourceResults();
   // Stats (over all results)
   $("st-total").textContent = all.length;
@@ -131,7 +145,7 @@ function render(){
   $("print-summary").textContent = "Total Students: " + all.length + "  •  Completed: " + all.filter(r=>r.status==="Completed").length + "  •  Cancelled: " + all.filter(r=>r.status==="Cancelled").length + "  •  Pass: " + all.filter(isPass).length;
 
   const posMap = positionMap(all);
-  currentList = all.filter(r => (!f || r.status===f) && (!q || r.name.toLowerCase().includes(q)));
+  currentList = all.filter(r => (!f || r.status===f) && (!fs || (r.section || "legacy")===fs) && (!q || r.name.toLowerCase().includes(q) || (r.roll||"").toLowerCase().includes(q)));
   const tb = $("results-body"); tb.innerHTML="";
   $("no-results").classList.toggle("hidden", all.length>0);
   currentList.forEach(function(r, i){
@@ -139,6 +153,7 @@ function render(){
     const pass = isPass(r);
     tr.innerHTML =
       "<td>"+(i+1)+"</td><td><b>"+esc(r.name)+"</b></td>"+
+      "<td class='print-hide'>"+esc(r.roll || "-")+"</td><td class='print-hide'>"+esc(sectionLabel(r))+"</td>"+
       "<td><b>"+r.score+"</b> / "+r.total+"</td><td><b>"+r.percent+"%</b></td>"+
       (function(){ const gr=gradeOf(r); return "<td class='print-hide'><span class='grade "+gr.cls+"'>"+gr.g+"</span></td>"; })()+
       (function(){ const p=posMap[r.key+"|"+r.date]; return "<td class='print-hide'>"+(p? "<span class='pos "+(p===1?"p1":p===2?"p2":p===3?"p3":"")+"'>"+p+"</span>" : "—")+"</td>"; })()+
@@ -159,6 +174,7 @@ function render(){
 }
 $("search").addEventListener("input", render);
 $("filter-status").addEventListener("change", render);
+$("filter-section") && $("filter-section").addEventListener("change", render);
 
 // Delete one (retake allow)
 async function delRecord(r){
@@ -191,13 +207,13 @@ $("btn-pdf-all").addEventListener("click", function(){
 $("btn-csv").addEventListener("click", function(){
   const all = sourceResults();
   if(!all.length){ alert("There are no results to export."); return; }
-  let csv = "S.No,Student Name,Marks Obtained,Total Marks,Percent,Grade,Position,Result,Status,Reason,Answered,Time Used,Date\n";
+  let csv = "S.No,Student Name,Roll No,Section,Marks Obtained,Total Marks,Percent,Grade,Position,Result,Status,Reason,Answered,Time Used,Date\n";
   all.forEach(function(r,i){
-    const posMap2=positionMap(all); const vals=[i+1,r.name,r.score,r.total,r.percent+"%",gradeOf(r).g,(posMap2[r.key+"|"+r.date]||"-"),(r.status==="Cancelled"?"CANCELLED":(isPass(r)?"PASS":"FAIL")),r.status,(r.reason||""),r.answered,(r.timeUsed||""),r.date];
+    const posMap2=positionMap(all); const vals=[i+1,r.name,(r.roll||""),sectionLabel(r),r.score,r.total,r.percent+"%",gradeOf(r).g,(posMap2[r.key+"|"+r.date]||"-"),(r.status==="Cancelled"?"CANCELLED":(isPass(r)?"PASS":"FAIL")),r.status,(r.reason||""),r.answered,(r.timeUsed||""),r.date];
     csv += vals.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(",")+"\n";
   });
   const a=document.createElement("a");
   a.href=URL.createObjectURL(new Blob(["\ufeff"+csv],{type:"text/csv"}));
-  a.download="STC-FullStack-HTML-CSS-Results.csv"; a.click(); URL.revokeObjectURL(a.href);
+  a.download="STC-FullStack-Results.csv"; a.click(); URL.revokeObjectURL(a.href);
 });
 })();
