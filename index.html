@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Full Stack Web Development Test (HTML + CSS) - Super Sys-Tech Computers Centre Umerkot</title>
-<meta name="description" content="Official online MCQ test of Super Sys-Tech Computers Centre Umerkot - Full Stack Web Development (HTML + CSS). 100 MCQs, 100 Minutes, Strict One-Time Test.">
+<meta name="description" content="Official online MCQ test of Super Sys-Tech Computers Centre Umerkot - Full Stack Web Development. 3 Sections (Basic, HTML + CSS, Advanced), 50 MCQs each, 50 Minutes per section, Strict One-Time Test.">
 <link rel="icon" href="assets/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
@@ -36,16 +36,16 @@
       <div>
         <span class="hero-badge">🎓 Official Online Examination Portal</span>
         <h1>Full Stack Web Development Test <span class="grad">(HTML + CSS)</span></h1>
-        <p class="hero-sub">The official online MCQ test of Super Sys-Tech Computers Centre, Umerkot. A professional examination covering all 29 topics of the syllabus, prepared on board pattern.</p>
+        <p class="hero-sub">The official online MCQ test of Super Sys-Tech Computers Centre, Umerkot. Choose your section — <b>Basic (HTML)</b>, <b>HTML + CSS</b> or <b>Advanced (HTML + CSS + JS)</b> — each section has its own 50 MCQs from the syllabus.</p>
         <div class="hero-points">
-          <div><span class="tick">✓</span><span><b>100 MCQs</b> — HTML (Topics 1–9) + CSS (Topics 10–29), each question carries 1 mark</span></div>
-          <div><span class="tick">✓</span><span><b>100 Minutes</b> live countdown timer — auto-submit when time ends</span></div>
-          <div><span class="tick">✓</span><span><b>Strict &amp; One-Time</b> — tab change, page close or refresh = test cancelled</span></div>
+          <div><span class="tick">✓</span><span><b>3 Sections × 50 MCQs</b> — Basic (HTML), HTML + CSS, Advanced (with JavaScript), each question carries 1 mark</span></div>
+          <div><span class="tick">✓</span><span><b>50 Minutes</b> per section — live countdown timer, auto-submit when time ends</span></div>
+          <div><span class="tick">✓</span><span><b>Strict &amp; One-Time per Section</b> — one attempt in each section; tab change, page close or refresh = test cancelled</span></div>
         </div>
         <div class="hero-stats">
-          <div class="hstat"><b>100</b><span>Total MCQs</span></div>
-          <div class="hstat"><b>100</b><span>Minutes</span></div>
-          <div class="hstat"><b>100</b><span>Total Marks</span></div>
+          <div class="hstat"><b>3</b><span>Sections</span></div>
+          <div class="hstat"><b>50</b><span>MCQs / Section</span></div>
+          <div class="hstat"><b>50</b><span>Minutes / Section</span></div>
           <div class="hstat"><b>40%</b><span>Passing</span></div>
         </div>
       </div>
@@ -61,12 +61,24 @@
         <div id="test-closed" class="hidden" style="text-align:center;padding:18px 10px 8px">
           <div style="font-size:42px">🔒</div>
           <h3 style="color:var(--navy);font-size:20px;margin:8px 0 6px">This Test is Now CLOSED</h3>
-          <p style="color:var(--muted);font-size:14px;line-height:1.6">The Full Stack Web Development Test (HTML + CSS) has ended and is no longer accepting attempts.<br>Thank you to all the students who participated. Results are available with the institute administration.</p>
+          <p style="color:var(--muted);font-size:14px;line-height:1.6">The Full Stack Web Development Test is currently not accepting attempts.<br>Thank you to all the students who participated. Results are available with the institute administration.</p>
         </div>
         <form id="entry-form" autocomplete="off">
           <div class="field">
+            <label>Select Your Section *</label>
+            <div class="sec-pick">
+              <label class="sec-opt"><input type="radio" name="section" value="basic"><span><b>Section 1 — Basic</b><small>Only HTML • Topics 1–9 • 50 MCQs</small></span></label>
+              <label class="sec-opt"><input type="radio" name="section" value="htmlcss"><span><b>Section 2 — HTML + CSS</b><small>HTML + CSS • Topics 1–31 • 50 MCQs</small></span></label>
+              <label class="sec-opt"><input type="radio" name="section" value="advanced"><span><b>Section 3 — Advanced</b><small>HTML + CSS + JavaScript • 50 MCQs</small></span></label>
+            </div>
+          </div>
+          <div class="field">
             <label for="student-name">Student Full Name *</label>
             <input type="text" id="student-name" placeholder="e.g. Ali Raza" required>
+          </div>
+          <div class="field">
+            <label for="student-roll">Roll No *</label>
+            <input type="text" id="student-roll" placeholder="e.g. 12" required>
           </div>
           <button class="btn" type="submit">▶ &nbsp;Start Test</button>
           <div class="err" id="entry-err"></div>
@@ -84,8 +96,8 @@
         <p>Just 3 simple steps — no registration, no fees.</p>
       </div>
       <div class="grid3">
-        <div class="fcard"><div class="step-num">1</div><h3>Enter Your Name</h3><p>Write your correct <b>Full Name</b> in the form above — this same name will appear on your result slip.</p></div>
-        <div class="fcard"><div class="step-num">2</div><h3>Attempt the Test</h3><p>100 MCQs appear on screen one by one. Use the Question Palette to jump to any question. The timer stays visible at all times.</p></div>
+        <div class="fcard"><div class="step-num">1</div><h3>Choose Section + Details</h3><p>Select your <b>Section</b> and write your correct <b>Full Name</b> and <b>Roll No</b> — the same name will appear on your result slip.</p></div>
+        <div class="fcard"><div class="step-num">2</div><h3>Attempt the Test</h3><p>50 MCQs of your section appear on screen one by one. Use the Question Palette to jump to any question. The timer stays visible at all times.</p></div>
         <div class="fcard"><div class="step-num">3</div><h3>Get Instant Result</h3><p>As soon as you submit, your score, percentage and PASS / FAIL appear on screen — and the result is saved permanently in the admin panel.</p></div>
       </div>
     </div>
@@ -95,12 +107,12 @@
     <div class="container">
       <div class="sec-head">
         <div class="kicker">Course Coverage</div>
-        <h2>Complete Syllabus — 29 Topics</h2>
-        <p>The test is strictly based on the syllabus taught to you. Questions from every topic are included.</p>
+        <h2>Complete Syllabus — 3 Sections</h2>
+        <p>Each section is strictly based on the syllabus taught to you. Every topic is covered — choose the section your teacher assigns.</p>
       </div>
-      <div class="grid2">
+      <div class="grid3">
         <div class="syl-card">
-          <div class="syl-head html"><span>🌐 HTML — Topics 1 to 9</span><span class="count">Part 1</span></div>
+          <div class="syl-head html"><span>🌐 Section 1 — BASIC</span><span class="count">HTML Only</span></div>
           <ul class="syl-list">
             <li><span class="no">1</span><span>HTML Structure<small>DOCTYPE, html, head, body, title</small></span></li>
             <li><span class="no">2</span><span>Content Tags<small>h1–h6, p, br, hr</small></span></li>
@@ -114,21 +126,36 @@
           </ul>
         </div>
         <div class="syl-card">
-          <div class="syl-head css"><span>🎨 CSS — Topics 10 to 29</span><span class="count">Part 2</span></div>
+          <div class="syl-head css"><span>🎨 Section 2 — HTML + CSS</span><span class="count">Topics 1–31</span></div>
           <ul class="syl-list">
-            <li><span class="no">10</span><span>CSS Introduction &amp; Selectors<small>inline, internal, external CSS</small></span></li>
-            <li><span class="no">11</span><span>Colors, Backgrounds &amp; Borders<small>color, background, opacity, border, radius</small></span></li>
-            <li><span class="no">12</span><span>Spacing, Dimensions &amp; Box Model<small>margin, padding, width, height, box-sizing</small></span></li>
-            <li><span class="no">13</span><span>Text, Fonts &amp; Icons<small>alignment, decoration, fonts, Font Awesome</small></span></li>
-            <li><span class="no">14</span><span>Links, Lists &amp; Tables Styling<small>:hover, list-style, striped tables</small></span></li>
-            <li><span class="no">15</span><span>Display &amp; Flexbox<small>block, inline, flex, justify, align, gap</small></span></li>
-            <li><span class="no">16</span><span>Positioning, z-index &amp; Overflow<small>relative, absolute, fixed, sticky</small></span></li>
-            <li><span class="no">17</span><span>Float &amp; Clear<small>float left/right, clear both</small></span></li>
-            <li><span class="no">18</span><span>CSS Transform (2D)<small>translate(), rotate(), scale(), skew()</small></span></li>
+            <li><span class="no">+</span><span>All HTML Topics 1–9<small>complete HTML of Section 1</small></span></li>
+            <li><span class="no">10</span><span>CSS Introduction<small>inline, internal, external CSS, selectors</small></span></li>
+            <li><span class="no">11</span><span>Colors &amp; Backgrounds<small>color, background, opacity</small></span></li>
+            <li><span class="no">12</span><span>Borders &amp; Spacing<small>border, radius, margin, padding</small></span></li>
+            <li><span class="no">13</span><span>Dimensions &amp; Box Model<small>width, height, box-sizing, outline</small></span></li>
+            <li><span class="no">14</span><span>Text, Fonts &amp; Icons<small>text styling, fonts, Font Awesome</small></span></li>
+            <li><span class="no">15</span><span>Links, Lists &amp; Tables Styling<small>:hover, list-style, striped tables</small></span></li>
+            <li><span class="no">16</span><span>Display &amp; Flexbox<small>block, inline, flex, justify, align, gap</small></span></li>
+            <li><span class="no">17</span><span>Positioning, z-index, Overflow, Float<small>relative, absolute, fixed, sticky, float, clear</small></span></li>
+            <li><span class="no">18</span><span>Transform, Transition &amp; Animation<small>translate, rotate, scale, @keyframes</small></span></li>
+          </ul>
+        </div>
+        <div class="syl-card">
+          <div class="syl-head js"><span>⚡ Section 3 — ADVANCED</span><span class="count">+ JavaScript</span></div>
+          <ul class="syl-list">
+            <li><span class="no">+</span><span>HTML + CSS<small>topics of Sections 1 &amp; 2</small></span></li>
+            <li><span class="no">36</span><span>JavaScript Introduction<small>internal / external JS</small></span></li>
+            <li><span class="no">37</span><span>Output Methods<small>console.log, document.write, alert, prompt</small></span></li>
+            <li><span class="no">38</span><span>Variables<small>var, let, const</small></span></li>
+            <li><span class="no">39</span><span>Data Types<small>string, number, boolean, null, undefined, object, array</small></span></li>
+            <li><span class="no">40</span><span>Operators<small>arithmetic, comparison, logical, ternary</small></span></li>
+            <li><span class="no">41</span><span>Conditions &amp; Switch<small>if, else if, switch, case, break</small></span></li>
+            <li><span class="no">42</span><span>Loops<small>for, while, do while, for in, for of</small></span></li>
+            <li><span class="no">43</span><span>Functions &amp; Scope<small>parameters, return, arrow functions, scope</small></span></li>
+            <li><span class="no">44</span><span>Objects &amp; Arrays<small>properties, methods, array methods</small></span></li>
           </ul>
         </div>
       </div>
-    </div>
   </section>
 
   <section class="rules-sec" id="rules">
@@ -139,11 +166,11 @@
         <p>These rules apply to every student. Any violation will automatically cancel the test — no second warning will be given.</p>
       </div>
       <div class="grid3">
-        <div class="rule-card danger"><h3>🔁 One-Time Attempt</h3><p>Each student can take the test <b>ONLY ONCE</b>. After one start / submit / cancel, the system automatically blocks any further attempt.</p></div>
+        <div class="rule-card danger"><h3>🔁 One-Time Attempt — Per Section</h3><p>Each student can attempt <b>each section ONLY ONCE</b>. After one start / submit / cancel in a section, that section is blocked — the other sections remain available.</p></div>
         <div class="rule-card danger"><h3>🚫 Tab / Page Change = Cancel</h3><p>During the test, switching tabs, minimizing the browser, or opening another app/page will <b>immediately CANCEL</b> the test.</p></div>
         <div class="rule-card danger"><h3>❌ Page Close / Refresh = Cancel</h3><p>Closing or refreshing the page will also cancel the test, and your attempt will be recorded.</p></div>
         <div class="rule-card"><h3>🖥 Full-Screen Mode</h3><p>The entire test runs in full-screen mode. Exiting full-screen will also cause cancellation.</p></div>
-        <div class="rule-card"><h3>⏱ 100 Minutes Fixed Time</h3><p>A total of 100 minutes for 100 questions. When time ends, the test submits automatically — no extra time is given.</p></div>
+        <div class="rule-card"><h3>⏱ 50 Minutes Fixed Time</h3><p>A total of 50 minutes for the 50 questions of your section. When time ends, the test submits automatically — no extra time is given.</p></div>
         <div class="rule-card"><h3>📵 No Copy / Paste</h3><p>Copy, paste and right-click are disabled during the test. Think and answer on your own — this test measures your real progress.</p></div>
       </div>
       <div style="text-align:center;margin-top:26px"><a href="#start" class="btn" style="width:auto;padding:14px 38px">I Am Ready — Start the Test ↑</a></div>
@@ -158,7 +185,7 @@
       <div class="q-card">
         <div class="q-meta">
           <span class="q-topic" id="q-topic">Topic</span>
-          <span class="q-count" id="q-count">Question 1 / 100</span>
+          <span class="q-count" id="q-count">Question 1 / 50</span>
         </div>
         <div class="q-progress"><i id="progress"></i></div>
         <div class="q-text" id="q-text"></div>
@@ -175,15 +202,15 @@
           <div class="avatar" id="avatar-initial">S</div>
           <div>
             <div style="font-weight:800;color:var(--navy);font-family:Poppins" id="th-name">Student</div>
-            <div style="font-size:12.5px;color:var(--muted)">Full Stack Web Development • HTML + CSS</div>
+            <div style="font-size:12.5px;color:var(--muted)" id="th-section">Section</div>
           </div>
         </div>
         <div class="timer-box" id="timer-box">
           <div class="lbl">TIME REMAINING</div>
-          <div class="timer" id="timer">01:40:00</div>
+          <div class="timer" id="timer">00:50:00</div>
         </div>
-        <div class="side-stat"><span>Answered</span><b><span id="th-answered">0</span> / 100</b></div>
-        <div class="side-stat"><span>Course</span><b>HTML + CSS</b></div>
+        <div class="side-stat"><span>Answered</span><b><span id="th-answered">0</span> / 50</b></div>
+        <div class="side-stat"><span>Roll No</span><b id="th-roll">-</b></div>
         <div class="side-stat"><span>Mode</span><b style="color:var(--red)">Strict • One-Time</b></div>
         <div style="font-weight:800;color:var(--navy);margin-top:13px;font-family:Poppins;font-size:14px">Question Palette</div>
         <div class="palette" id="palette"></div>
@@ -201,15 +228,16 @@
       <img src="assets/logo.png" alt="STC" style="width:86px;height:86px;object-fit:contain">
       <h2 style="color:var(--navy);margin-top:10px">Test Submitted Successfully ✔</h2>
       <p style="color:var(--muted)" id="res-course">Full Stack Web Development Test (HTML + CSS)</p>
-      <div class="score-circle" id="score-circle"><b id="res-score">0</b><span>out of 100</span></div>
+      <div class="score-circle" id="score-circle"><b id="res-score">0</b><span>out of 50</span></div>
       <h3 id="res-status" style="font-size:21px"></h3>
       <div class="detail-grid">
         <div class="dstat"><b id="res-name">-</b><span>Student</span></div>
         <div class="dstat"><b id="res-percent">0%</b><span>Percentage</span></div>
         <div class="dstat"><b id="res-correct">0</b><span>Correct</span></div>
+        <div class="dstat"><b id="res-section">-</b><span>Section</span></div>
         <div class="dstat"><b id="res-time">-</b><span>Time Used</span></div>
       </div>
-      <p style="color:var(--muted);font-size:14px">Your result has been saved in the admin panel. This attempt is final — the test cannot be taken again.</p>
+      <p style="color:var(--muted);font-size:14px">Your result has been saved in the admin panel. This section attempt is final — this section cannot be taken again.</p>
       <button class="btn green" id="btn-my-pdf" type="button" style="max-width:360px;margin:16px auto 4px">⬇ &nbsp;Download My Result (PDF)</button>
       <p style="color:var(--muted);font-size:12.5px">Clicking the button opens the print window — select <b>"Save as PDF"</b> there to save your result slip.</p>
     </div>
