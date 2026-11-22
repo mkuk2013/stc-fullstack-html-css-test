@@ -135,7 +135,7 @@ function render(){
   const fs = $("filter-section") ? $("filter-section").value : "";
   const all = sourceResults();
   // Stats (over the selected section scope - default: new sections only)
-  const scopeForStats = all.filter(r => { const fsx = $("filter-section") ? $("filter-section").value : ""; return fsx==="all" ? true : fsx ? (r.section || "legacy")===fsx : !!r.section; });
+  const scopeForStats = all.filter(r => { const fsx = $("filter-section") ? $("filter-section").value : ""; return fsx ? (r.section || "legacy")===fsx : !!r.section; });
   $("st-total").textContent = scopeForStats.length;
   $("st-completed").textContent = scopeForStats.filter(r=>r.status==="Completed").length;
   $("st-cancelled").textContent = scopeForStats.filter(r=>r.status==="Cancelled").length;
@@ -147,7 +147,7 @@ function render(){
 
   // Section scope: by default ONLY the new 3-section results are shown.
   // Purane (Old Test) results sirf apne alag filter par nazar ate hain - naye sections mein mix nahi hote.
-  const scoped = all.filter(r => fs==="all" ? true : fs ? (r.section || "legacy")===fs : !!r.section);
+  const scoped = all.filter(r => fs ? (r.section || "legacy")===fs : !!r.section);
   const posMap = positionMap(scoped);
   currentList = scoped.filter(r => (!f || r.status===f) && (!q || r.name.toLowerCase().includes(q) || (r.roll||"").toLowerCase().includes(q)));
   const tb = $("results-body"); tb.innerHTML="";
