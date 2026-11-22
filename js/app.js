@@ -32,18 +32,16 @@ function sectionOf(id){ return CONFIG.SECTIONS.find(function(x){ return x.id ===
 $("entry-form").addEventListener("submit", async function(e){
   e.preventDefault();
   const name = $("student-name").value.trim();
-  const roll = $("student-roll").value.trim();
   const secEl = document.querySelector('input[name="section"]:checked');
   const err = $("entry-err"); err.style.display="none";
   if(!secEl){ err.textContent = "Please select your section first."; err.style.display="block"; return; }
   if(name.length < 3){ err.textContent = "Please enter your full name."; err.style.display="block"; return; }
-  if(!roll){ err.textContent = "Please enter your Roll No."; err.style.display="block"; return; }
   const section = sectionOf(secEl.value);
 
   if(!testOpen){ err.textContent = "This test is now CLOSED."; err.style.display="block"; return; }
-  const key = section.id + "|" + studentKey(roll);
+  const key = section.id + "|" + studentKey(name);
   function showPrev(p){
-    err.innerHTML = "⛔ <b>" + name + "</b> (Roll No " + roll + ") has already taken the <b>" + section.name + "</b> section - Status: <b>" + p.status + "</b>, Score: <b>" + p.score + "/" + (p.total || 50) + "</b> (" + p.date + ").<br>One-time policy: a second attempt in the same section is not allowed. The other sections can still be attempted. If there is an issue, please contact the admin.";
+    err.innerHTML = "⛔ <b>" + name + "</b> has already taken the <b>" + section.name + "</b> section - Status: <b>" + p.status + "</b>, Score: <b>" + p.score + "/" + (p.total || 50) + "</b> (" + p.date + ").<br>One-time policy: a second attempt in the same section is not allowed. The other sections can still be attempted. If there is an issue, please contact the admin.";
     err.style.display="block";
   }
   // Central check FIRST: the central database is the authority.
@@ -68,12 +66,12 @@ $("entry-form").addEventListener("submit", async function(e){
     if(prev){ showPrev(prev); return; }
   }
   if(!confirm("You are about to start the " + section.name + " section.\n\n• 50 MCQs, 50 Minutes\n• Tab/page change or close = TEST CANCELLED\n• This section can be taken ONLY ONCE\n\nPress OK to start the test in FULL SCREEN.")) return;
-  startTest(name, roll, section, key);
+  startTest(name, section, key);
 });
 
-function startTest(name, roll, section, key){
+function startTest(name, section, key){
   state = {
-    name, roll, section: section.id, sectionName: section.name, key,
+    name, section: section.id, sectionName: section.name, key,
     questions: shuffle(QUESTION_BANK[section.id] || []),
     answers: {},
     current: 0,
@@ -85,7 +83,6 @@ function startTest(name, roll, section, key){
   // Active flag: page close/refresh par cancel record karne ke liye
   localStorage.setItem(CONFIG.ACTIVE_KEY, JSON.stringify({key, name, startedAt: state.startedAt}));
   $("th-name").textContent = name;
-  $("th-roll").textContent = roll;
   $("th-section").textContent = section.name;
   show("view-test");
   renderQuestion(); buildPalette(); updateProgress(); updateTimerText();
@@ -176,7 +173,7 @@ function persistResult(status, reason, useBeacon){
   const correct = scoreNow();
   const usedSec = CONFIG.DURATION_MINUTES*60 - state.left;
   const rec = {
-    key: state.key, name: state.name, roll: state.roll, section: state.section, sectionName: state.sectionName,
+    key: state.key, name: state.name, section: state.section, sectionName: state.sectionName,
     score: correct, total: state.questions.length, correct: correct,
     wrong: answeredCount()-correct, answered: answeredCount(),
     percent: Math.round(correct/state.questions.length*100),
@@ -208,7 +205,6 @@ function buildStudentSlip(){
     "<h3 style='margin-top:10px;letter-spacing:2px'>RESULT SLIP</h3><div style='font-weight:700'>Full Stack Web Development Test (HTML + CSS)</div></div>" +
     "<table><tbody>" +
     "<tr><td>Student Name</td><td><b>" + escHtml(rec.name) + "</b></td></tr>" +
-    "<tr><td>Roll No</td><td><b>" + escHtml(rec.roll || "-") + "</b></td></tr>" +
     "<tr><td>Section</td><td><b>" + escHtml(rec.sectionName || rec.section || "-") + "</b></td></tr>" +
     "<tr><td>Marks Obtained</td><td><b>" + rec.score + " / " + rec.total + "</b></td></tr>" +
     "<tr><td>Percentage</td><td><b>" + rec.percent + "%</b></td></tr>" +
