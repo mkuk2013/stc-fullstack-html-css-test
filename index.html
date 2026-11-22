@@ -76,10 +76,6 @@
             <label for="student-name">Student Full Name *</label>
             <input type="text" id="student-name" placeholder="e.g. Ali Raza" required>
           </div>
-          <div class="field">
-            <label for="student-roll">Roll No *</label>
-            <input type="text" id="student-roll" placeholder="e.g. 12" required>
-          </div>
           <button class="btn" type="submit">▶ &nbsp;Start Test</button>
           <div class="err" id="entry-err"></div>
         </form>
@@ -96,7 +92,7 @@
         <p>Just 3 simple steps — no registration, no fees.</p>
       </div>
       <div class="grid3">
-        <div class="fcard"><div class="step-num">1</div><h3>Choose Section + Details</h3><p>Select your <b>Section</b> and write your correct <b>Full Name</b> and <b>Roll No</b> — the same name will appear on your result slip.</p></div>
+        <div class="fcard"><div class="step-num">1</div><h3>Choose Section + Name</h3><p>Select your <b>Section</b> and write your correct <b>Full Name</b> — the same name will appear on your result slip.</p></div>
         <div class="fcard"><div class="step-num">2</div><h3>Attempt the Test</h3><p>50 MCQs of your section appear on screen one by one. Use the Question Palette to jump to any question. The timer stays visible at all times.</p></div>
         <div class="fcard"><div class="step-num">3</div><h3>Get Instant Result</h3><p>As soon as you submit, your score, percentage and PASS / FAIL appear on screen — and the result is saved permanently in the admin panel.</p></div>
       </div>
@@ -210,7 +206,7 @@
           <div class="timer" id="timer">00:50:00</div>
         </div>
         <div class="side-stat"><span>Answered</span><b><span id="th-answered">0</span> / 50</b></div>
-        <div class="side-stat"><span>Roll No</span><b id="th-roll">-</b></div>
+        <div class="side-stat"><span>Questions</span><b>50 MCQs</b></div>
         <div class="side-stat"><span>Mode</span><b style="color:var(--red)">Strict • One-Time</b></div>
         <div style="font-weight:800;color:var(--navy);margin-top:13px;font-family:Poppins;font-size:14px">Question Palette</div>
         <div class="palette" id="palette"></div>
