@@ -153,7 +153,7 @@ function render(){
     const pass = isPass(r);
     tr.innerHTML =
       "<td>"+(i+1)+"</td><td><b>"+esc(r.name)+"</b></td>"+
-      "<td class='print-hide'>"+esc(r.roll || "-")+"</td><td class='print-hide'>"+esc(sectionLabel(r))+"</td>"+
+      "<td class='print-hide'>"+esc(sectionLabel(r))+"</td>"+
       "<td><b>"+r.score+"</b> / "+r.total+"</td><td><b>"+r.percent+"%</b></td>"+
       (function(){ const gr=gradeOf(r); return "<td class='print-hide'><span class='grade "+gr.cls+"'>"+gr.g+"</span></td>"; })()+
       (function(){ const p=posMap[r.key+"|"+r.date]; return "<td class='print-hide'>"+(p? "<span class='pos "+(p===1?"p1":p===2?"p2":p===3?"p3":"")+"'>"+p+"</span>" : "—")+"</td>"; })()+
@@ -207,9 +207,9 @@ $("btn-pdf-all").addEventListener("click", function(){
 $("btn-csv").addEventListener("click", function(){
   const all = sourceResults();
   if(!all.length){ alert("There are no results to export."); return; }
-  let csv = "S.No,Student Name,Roll No,Section,Marks Obtained,Total Marks,Percent,Grade,Position,Result,Status,Reason,Answered,Time Used,Date\n";
+  let csv = "S.No,Student Name,Section,Marks Obtained,Total Marks,Percent,Grade,Position,Result,Status,Reason,Answered,Time Used,Date\n";
   all.forEach(function(r,i){
-    const posMap2=positionMap(all); const vals=[i+1,r.name,(r.roll||""),sectionLabel(r),r.score,r.total,r.percent+"%",gradeOf(r).g,(posMap2[r.key+"|"+r.date]||"-"),(r.status==="Cancelled"?"CANCELLED":(isPass(r)?"PASS":"FAIL")),r.status,(r.reason||""),r.answered,(r.timeUsed||""),r.date];
+    const posMap2=positionMap(all); const vals=[i+1,r.name,sectionLabel(r),r.score,r.total,r.percent+"%",gradeOf(r).g,(posMap2[r.key+"|"+r.date]||"-"),(r.status==="Cancelled"?"CANCELLED":(isPass(r)?"PASS":"FAIL")),r.status,(r.reason||""),r.answered,(r.timeUsed||""),r.date];
     csv += vals.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(",")+"\n";
   });
   const a=document.createElement("a");
