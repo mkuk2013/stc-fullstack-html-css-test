@@ -69,6 +69,21 @@ export default async (req) => {
         await store.setJSON("__settings__", { open: body.open === true, ts: Date.now() });
         return json({ ok: true, open: body.open === true });
       }
+      if (act === "set-practical") {
+        if (body.pw !== adminPw()) return json({ error: "unauthorized" }, 401);
+        if (!body.key) return json({ error: "no key" }, 400);
+        const rec = await store.get(enc(body.key), { type: "json" }).catch(() => null);
+        if (!rec) return json({ error: "not found" }, 404);
+        if (body.practical === null || body.practical === "" || body.practical === undefined) {
+          delete rec.practical;
+        } else {
+          const p = Number(body.practical);
+          if (isNaN(p) || p < 0 || p > 50) return json({ error: "practical must be 0-50" }, 400);
+          rec.practical = p;
+        }
+        await store.setJSON(enc(body.key), rec);
+        return json({ ok: true, practical: rec.practical === undefined ? null : rec.practical });
+      }
       if (act === "delete") {
         if (body.pw !== adminPw()) return json({ error: "unauthorized" }, 401);
         if (body.key) await store.delete(enc(body.key));

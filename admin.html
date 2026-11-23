@@ -65,13 +65,13 @@
           <img src="assets/logo.png" alt="STC" class="sheet-logo-r">
         </div>
         <div class="sheet-band">OFFICIAL RESULT SHEET</div>
-        <div class="sheet-meta print-hide">
-          <span><b>Course:</b> Full Stack Web Development</span>
+        <div class="sheet-meta">
+          <span><b>Course:</b> Full Stack Web Development (6 Months)</span>
           <span><b>Sections:</b> Basic • HTML + CSS • Advanced</span>
-          <span><b>Questions / Section:</b> 50</span>
-          <span><b>Marks / Section:</b> 50</span>
+          <span><b>MCQ Marks:</b> 50</span>
+          <span><b>Practical Marks:</b> 50</span>
+          <span><b>Total Marks:</b> 100</span>
           <span><b>Passing Marks:</b> 40%</span>
-          <span><b>Time Allowed:</b> 50 Minutes / Section</span>
         </div>
         <p style="color:var(--muted);font-size:12.5px;margin-top:8px" id="print-date"></p>
         <p class="print-hide" style="font-weight:700;font-size:13.5px;margin-top:2px" id="print-summary"></p>
@@ -109,12 +109,12 @@
           <button class="btn small ghost" id="btn-logout" type="button">Logout</button>
         </div>
         <p class="no-print hidden" id="retrieve-status" style="font-size:13.5px;font-weight:700;padding:10px 14px;border-radius:10px;margin-bottom:10px"></p>
-        <p class="no-print" style="font-size:13px;color:var(--muted);line-height:1.6">💡 <b>Retrieve Data:</b> Fetches all results from the central database into this panel, and also uploads any old results stored on this device into the central database.<br>💡 <b>One Combined PDF:</b> Clicking "Download Combined PDF" puts <b>all students on one single Result Sheet</b> — in the print window, select Destination <b>"Save as PDF"</b> and save one PDF file. Separate per-student PDFs are not created from here.<br>🗑 Deleting a student's record allows that student to <b>retake the test</b> (only the admin can allow a retake).</p>
+        <p class="no-print" style="font-size:13px;color:var(--muted);line-height:1.6">💡 <b>Retrieve Data:</b> Fetches all results from the central database into this panel, and also uploads any old results stored on this device into the central database.<br>💡 <b>One Combined PDF:</b> Clicking "Download Combined PDF" puts <b>all students on one single Result Sheet</b> — in the print window, select Destination <b>"Save as PDF"</b> and save one PDF file. Separate per-student PDFs are not created from here.<br>🗑 Deleting a student's record allows that student to <b>retake the test</b> (only the admin can allow a retake).<br>✏️ <b>Practical Marks:</b> Har student ke Practical Task ke marks (0–50) usi ki row mein likh kar <b>Save</b> dabayein — marks central database mein save hote hain. Official Result mein MCQ (50) + Practical (50) = Total (100) aur Percentage khud ban jata hai. Jis ke marks na diye hon, us ke aage <b>Pending</b> ayega.</p>
 
         <div class="tbl-wrap" style="margin-top:14px">
         <table id="results-table">
           <thead><tr>
-            <th>S.No</th><th>Student Name</th><th class="print-hide">Section</th><th>Marks Obtained</th><th>Percentage</th><th class="print-hide">Grade</th><th class="print-hide">Position</th><th class="print-hide">Result</th><th class="print-hide">Status</th><th class="print-hide">Answered</th><th class="print-hide">Time Used</th><th class="print-hide">Date / Time</th><th class="no-print">Actions</th>
+            <th>S.No</th><th>Student Name</th><th>Section</th><th>Course</th><th>MCQ Marks</th><th>Practical Marks</th><th>Total Marks</th><th>Percentage</th><th>Grade</th><th class="print-hide">Position</th><th>Result</th><th class="print-hide">Status</th><th class="print-hide">Answered</th><th class="print-hide">Time Used</th><th class="print-hide">Date / Time</th><th class="no-print">Actions</th>
           </tr></thead>
           <tbody id="results-body"></tbody>
         </table>

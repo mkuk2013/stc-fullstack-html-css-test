@@ -267,8 +267,12 @@ tr:hover td{background:#eef5fd}
 .sign-block{text-align:center;font-size:12.5px;font-weight:700;color:var(--navy);letter-spacing:.4px}
 .sign-line{border-bottom:1.6px solid var(--navy);width:200px;margin:0 auto 5px;height:6px}
 .sign-img{display:block;height:32px;max-width:180px;object-fit:contain;margin:0 auto 2px}
+.print-only{display:none}
+.prac-wrap{display:flex;gap:5px;align-items:center}
+.prac-input{width:58px;padding:5px 7px;border:1.5px solid var(--border,#dbe4ef);border-radius:7px;font-size:13px}
 /* print */
 @media print{
+  .print-only{display:inline!important}
   body{background:#fff}
   .print-hide{display:none!important}
   .navbar,.gov-strip,footer,.toolbar,.no-print,#view-home,#view-test,#view-result,#view-cancelled{display:none!important}
@@ -276,7 +280,7 @@ tr:hover td{background:#eef5fd}
   .admin-shell,.test-shell{max-width:100%;padding:0}
   .panel-card,.result-card{box-shadow:none;border:none;padding:4px}
   .kpi{color:#000;background:#eee!important;-webkit-print-color-adjust:exact}
-  table{font-size:12px}
+  table{font-size:11px}
   .print-sign{display:flex;justify-content:flex-end;margin-top:40px}
   .sheet-head{border:2px solid #000;border-radius:0}
   .sheet-band{background:#0a2540!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}

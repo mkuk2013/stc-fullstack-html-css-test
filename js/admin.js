@@ -98,9 +98,28 @@ $("test-toggle") && $("test-toggle").addEventListener("change", async function()
     alert("Status change failed. Please check the internet connection and try again.");
   }
 });
-function isPass(r){ return r.status==="Completed" && r.percent >= CONFIG.PASS_PERCENT; }
+const COURSE_NAME = "Full Stack Web Development (6 Months)";
+// Combined official result: sirf nayi test (total 50) par - MCQ + Practical = Total /100
+function combined(r){
+  if(r.status!=="Completed" || r.total!==50) return null;
+  if(typeof r.practical !== "number") return { pending:true };
+  const total = r.score + r.practical;
+  return { pending:false, total:total, pct:total };
+}
+function sortKey(r){ const c = combined(r); return c ? (c.pending ? r.percent : c.total) : r.percent; }
+function isPass(r){ const c = combined(r); if(c) return !c.pending && c.total >= CONFIG.PASS_PERCENT; return r.status==="Completed" && r.percent >= CONFIG.PASS_PERCENT; }
+function gradeOfPct(p){
+  if(p>=80) return {g:"A+", cls:"ga"};
+  if(p>=70) return {g:"A", cls:"ga"};
+  if(p>=60) return {g:"B", cls:"gb"};
+  if(p>=50) return {g:"C", cls:"gc"};
+  if(p>=40) return {g:"D", cls:"gd"};
+  return {g:"F", cls:"gf"};
+}
 function gradeOf(r){
   if(r.status!=="Completed") return {g:"—", cls:"gx"};
+  const c = combined(r);
+  if(c) return c.pending ? {g:"—", cls:"gx"} : gradeOfPct(c.pct);
   const p = r.percent;
   if(p>=80) return {g:"A+", cls:"ga"};
   if(p>=70) return {g:"A", cls:"ga"};
@@ -122,9 +141,9 @@ function positionMap(all){
   const groups = {};
   all.filter(r=>r.status==="Completed").forEach(function(r){ const g = r.section || "legacy"; (groups[g] = groups[g] || []).push(r); });
   Object.keys(groups).forEach(function(g){
-    const done = groups[g].slice().sort((a,b)=>b.score-a.score);
+    const done = groups[g].slice().sort((a,b)=>sortKey(b)-sortKey(a));
     let lastScore=null, lastRank=0;
-    done.forEach(function(r,i){ if(r.score!==lastScore){ lastRank=i+1; lastScore=r.score; } map[r.key+"|"+r.date]=lastRank; });
+    done.forEach(function(r,i){ const sk = sortKey(r); if(sk!==lastScore){ lastRank=i+1; lastScore=sk; } map[r.key+"|"+r.date]=lastRank; });
   });
   return map;
 }
@@ -140,8 +159,8 @@ function render(){
   $("st-completed").textContent = scopeForStats.filter(r=>r.status==="Completed").length;
   $("st-cancelled").textContent = scopeForStats.filter(r=>r.status==="Cancelled").length;
   $("st-pass").textContent = scopeForStats.filter(isPass).length;
-  $("st-avg").textContent = scopeForStats.length ? Math.round(scopeForStats.reduce((s,r)=>s+r.percent,0)/scopeForStats.length) + "%" : "0%";
-  $("st-high").textContent = scopeForStats.length ? Math.max.apply(null, scopeForStats.map(r=>r.score)) : 0;
+  $("st-avg").textContent = scopeForStats.length ? Math.round(scopeForStats.reduce((s,r)=>s+sortKey(r),0)/scopeForStats.length) + "%" : "0%";
+  $("st-high").textContent = scopeForStats.length ? Math.max.apply(null, scopeForStats.map(function(r){ const c=combined(r); return c && !c.pending ? c.total : r.score; })) : 0;
   $("print-date").textContent = "Printed on: " + new Date().toLocaleString("en-GB",{timeZone:"Asia/Karachi"});
   $("print-summary").textContent = "Total Students: " + scopeForStats.length + "  •  Completed: " + scopeForStats.filter(r=>r.status==="Completed").length + "  •  Cancelled: " + scopeForStats.filter(r=>r.status==="Cancelled").length + "  •  Pass: " + scopeForStats.filter(isPass).length;
 
@@ -155,13 +174,22 @@ function render(){
   currentList.forEach(function(r, i){
     const tr = document.createElement("tr");
     const pass = isPass(r);
+    const c = combined(r);
+    const pracPrint = (r.total!==50 || r.status!=="Completed") ? "—" : (typeof r.practical==="number" ? String(r.practical) : "Pending");
+    const pracCell = (r.total!==50 || r.status!=="Completed")
+      ? "<td>—</td>"
+      : "<td><span class='print-only'>"+pracPrint+"</span><span class='no-print prac-wrap'><input class='prac-input' type='number' min='0' max='50' placeholder='0-50' value='"+(typeof r.practical==="number" ? r.practical : "")+"'><button class='btn small' data-act='prac' data-i='"+i+"' title='Practical marks save karein (0-50)'>Save</button></span></td>";
     tr.innerHTML =
       "<td>"+(i+1)+"</td><td><b>"+esc(r.name)+"</b></td>"+
-      "<td class='print-hide'>"+esc(sectionLabel(r))+"</td>"+
-      "<td><b>"+r.score+"</b> / "+r.total+"</td><td><b>"+r.percent+"%</b></td>"+
-      (function(){ const gr=gradeOf(r); return "<td class='print-hide'><span class='grade "+gr.cls+"'>"+gr.g+"</span></td>"; })()+
+      "<td>"+esc(sectionLabel(r))+"</td>"+
+      "<td style='font-size:12px'>"+COURSE_NAME+"</td>"+
+      "<td><b>"+r.score+"</b> / "+r.total+"</td>"+
+      pracCell+
+      "<td>"+(c ? (c.pending ? "—" : "<b>"+c.total+"</b> / 100") : "<b>"+r.score+"</b> / "+r.total)+"</td>"+
+      "<td><b>"+(c ? (c.pending ? "—" : c.pct+"%") : r.percent+"%")+"</b></td>"+
+      (function(){ const gr=gradeOf(r); return "<td><span class='grade "+gr.cls+"'>"+gr.g+"</span></td>"; })()+
       (function(){ const p=posMap[r.key+"|"+r.date]; return "<td class='print-hide'>"+(p? "<span class='pos "+(p===1?"p1":p===2?"p2":p===3?"p3":"")+"'>"+p+"</span>" : "—")+"</td>"; })()+
-      "<td class='print-hide'>"+(r.status==="Cancelled" ? "<span style='color:var(--red);font-weight:800'>CANCELLED</span>" : (pass ? "<span style='color:var(--green);font-weight:800'>PASS</span>" : "<span style='color:var(--red);font-weight:800'>FAIL</span>"))+"</td>"+
+      "<td>"+(r.status==="Cancelled" ? "<span style='color:var(--red);font-weight:800'>CANCELLED</span>" : (c && c.pending ? "<span style='color:#b45309;font-weight:800'>PENDING</span>" : (pass ? "<span style='color:var(--green);font-weight:800'>PASS</span>" : "<span style='color:var(--red);font-weight:800'>FAIL</span>")))+"</td>"+
       "<td class='print-hide'><span class='badge "+(r.status==="Completed"?"ok":"cancel")+"'>"+esc(r.status)+"</span>"+(r.reason && r.status==="Cancelled" ? "<div style='font-size:11px;color:var(--muted);max-width:170px'>"+esc(r.reason)+"</div>" : "")+"</td>"+
       "<td class='print-hide'>"+r.answered+"</td><td class='print-hide'>"+esc(r.timeUsed||"-")+"</td><td class='print-hide' style='white-space:nowrap'>"+esc(r.date)+"</td>"+
       "<td class='no-print' style='white-space:nowrap'>"+
@@ -173,12 +201,36 @@ function render(){
     b.addEventListener("click", function(){
       const r = currentList[Number(b.dataset.i)];
       if(b.dataset.act==="del") delRecord(r);
+      if(b.dataset.act==="prac"){ const inp = b.parentElement.querySelector("input"); savePractical(r, inp, b); }
     });
   });
 }
 $("search").addEventListener("input", render);
 $("filter-status").addEventListener("change", render);
 $("filter-section") && $("filter-section").addEventListener("change", render);
+
+// Practical marks save (central DB mein - refresh par zaya nahi hote)
+async function savePractical(r, inp, btn){
+  const v = (inp && inp.value || "").trim();
+  let p = null;
+  if(v !== ""){
+    p = Number(v);
+    if(isNaN(p) || p < 0 || p > 50){ alert("Practical marks 0 se 50 ke darmiyan hone chahiye."); return; }
+  }
+  btn.disabled = true; const old = btn.textContent; btn.textContent = "Saving...";
+  try {
+    const res = await fetch(CONFIG.API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "set-practical", key: r.key, practical: p, pw: adminPw() }) });
+    const data = await res.json().catch(() => ({}));
+    if(!res.ok || !data.ok) throw new Error(data.error || res.status);
+    const apply = function(x){ if(x.key === r.key){ if(p === null) delete x.practical; else x.practical = p; } };
+    const local = getResults(); local.forEach(apply); saveResults(local);
+    if(remoteCache) remoteCache.forEach(apply);
+    render();
+  } catch(e) {
+    alert("Practical marks save nahi ho sake. Internet check karke dobara koshish karein.");
+    btn.disabled = false; btn.textContent = old;
+  }
+}
 
 // Delete one (retake allow)
 async function delRecord(r){
@@ -211,9 +263,9 @@ $("btn-pdf-all").addEventListener("click", function(){
 $("btn-csv").addEventListener("click", function(){
   const all = sourceResults();
   if(!all.length){ alert("There are no results to export."); return; }
-  let csv = "S.No,Student Name,Section,Marks Obtained,Total Marks,Percent,Grade,Position,Result,Status,Reason,Answered,Time Used,Date\n";
+  let csv = "S.No,Student Name,Section,Course,MCQ Marks,MCQ Total,Practical Marks,Total Marks,Percent,Grade,Position,Result,Status,Reason,Answered,Time Used,Date\n";
   all.forEach(function(r,i){
-    const posMap2=positionMap(all); const vals=[i+1,r.name,sectionLabel(r),r.score,r.total,r.percent+"%",gradeOf(r).g,(posMap2[r.key+"|"+r.date]||"-"),(r.status==="Cancelled"?"CANCELLED":(isPass(r)?"PASS":"FAIL")),r.status,(r.reason||""),r.answered,(r.timeUsed||""),r.date];
+    const posMap2=positionMap(all); const cc=combined(r); const vals=[i+1,r.name,sectionLabel(r),COURSE_NAME,r.score,r.total,(r.total!==50?"-":(typeof r.practical==="number"?r.practical:"Pending")),(cc?(cc.pending?"-":cc.total):r.score),(cc?(cc.pending?"-":cc.pct+"%"):r.percent+"%"),gradeOf(r).g,(posMap2[r.key+"|"+r.date]||"-"),(r.status==="Cancelled"?"CANCELLED":(cc&&cc.pending?"PENDING":(isPass(r)?"PASS":"FAIL"))),r.status,(r.reason||""),r.answered,(r.timeUsed||""),r.date];
     csv += vals.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(",")+"\n";
   });
   const a=document.createElement("a");
