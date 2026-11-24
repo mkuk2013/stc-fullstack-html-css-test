@@ -18,6 +18,12 @@ function json(data, status) {
   });
 }
 
+// Tombstones: admin ne jo record delete ki, us ki nishani - taake student side
+// "admin ne delete kiya (retake allowed)" aur "record server tak pohancha hi nahi (recover karo)"
+// mein farq kar sake. Key = enc(student key).
+async function loadTombs(store) { return (await store.get("__tombstones__", { type: "json" }).catch(() => null)) || {}; }
+async function saveTombs(store, t) { await store.setJSON("__tombstones__", t); }
+
 export default async (req) => {
   const store = getStore({ name: STORE_NAME, consistency: "strong" });
   const url = new URL(req.url);
@@ -35,7 +41,9 @@ export default async (req) => {
       const key = url.searchParams.get("key") || "";
       if (!key) return json({ exists: false });
       const rec = await store.get(enc(key), { type: "json" }).catch(() => null);
+      const tombs = await loadTombs(store);
       return json({
+        deleted: !!tombs[enc(key)],
         exists: !!rec,
         record: rec ? { name: rec.name, status: rec.status, score: rec.score, total: rec.total, date: rec.date } : null
       });
@@ -45,7 +53,7 @@ export default async (req) => {
       const { blobs } = await store.list();
       const out = [];
       for (const b of blobs) {
-        if (b.key === "__settings__") continue;
+        if (b.key === "__settings__" || b.key === "__tombstones__") continue;
         const r = await store.get(b.key, { type: "json" }).catch(() => null);
         if (r) out.push(r);
       }
@@ -62,6 +70,8 @@ export default async (req) => {
         if (existing) return json({ error: "exists", record: existing }, 409);
         rec.ts = Date.now();
         await store.setJSON(enc(rec.key), rec);
+        const tombs = await loadTombs(store);
+        if (tombs[enc(rec.key)]) { delete tombs[enc(rec.key)]; await saveTombs(store, tombs); }
         return json({ ok: true });
       }
       if (act === "set-status") {
@@ -97,14 +107,21 @@ export default async (req) => {
       }
       if (act === "delete") {
         if (body.pw !== adminPw()) return json({ error: "unauthorized" }, 401);
-        if (body.key) await store.delete(enc(body.key));
+        if (body.key) {
+          await store.delete(enc(body.key));
+          const tombs = await loadTombs(store);
+          tombs[enc(body.key)] = Date.now();
+          await saveTombs(store, tombs);
+        }
         return json({ ok: true });
       }
       if (act === "clear") {
         if (body.pw !== adminPw()) return json({ error: "unauthorized" }, 401);
         const { blobs } = await store.list();
+        const tombs = await loadTombs(store);
         let n = 0;
-        for (const b of blobs) { if (b.key !== "__settings__") { await store.delete(b.key); n++; } }
+        for (const b of blobs) { if (b.key !== "__settings__" && b.key !== "__tombstones__") { tombs[b.key] = Date.now(); await store.delete(b.key); n++; } }
+        await saveTombs(store, tombs);
         return json({ ok: true, deleted: n });
       }
       return json({ error: "unknown action" }, 400);

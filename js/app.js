@@ -50,15 +50,23 @@ $("entry-form").addEventListener("submit", async function(e){
   const btn = $("entry-form").querySelector("button[type=submit]");
   const oldBtnText = btn ? btn.textContent : "";
   if(btn){ btn.disabled = true; btn.textContent = "Checking..."; }
-  let remoteRec = null, apiOk = false;
+  let remoteRec = null, apiOk = false, remoteDeleted = false;
   try {
     const resp = await fetch(CONFIG.API + "?action=check&key=" + encodeURIComponent(key));
-    if(resp.ok){ apiOk = true; const d = await resp.json(); if(d.exists) remoteRec = d.record; }
+    if(resp.ok){ apiOk = true; const d = await resp.json(); if(d.exists) remoteRec = d.record; if(d.deleted) remoteDeleted = true; }
   } catch(e2){ /* offline / API down: neeche local check lagega */ }
   if(btn){ btn.disabled = false; btn.textContent = oldBtnText; }
   if(remoteRec){ showPrev(remoteRec); return; }
   if(apiOk){
-    // Server par is naam ka koi record nahi: local copy stale hai (admin ne delete ki thi) - saaf kar do
+    const local = getResults().find(r => r.key === key);
+    if(local && !remoteDeleted && !local.uploaded){
+      // Record sirf is device par hai - submit ke waqt server tak nahi pohancha tha.
+      // Pehle usay central database mein upload karke recover karo, phir already-taken dikhao.
+      const okUp = await tryUpload(local);
+      if(okUp) markUploaded(key);
+      showPrev(local); return;
+    }
+    // Server par record nahi aur (admin ne delete ki thi / local uploaded tha): local copy saaf - retake allowed
     saveResults(getResults().filter(r => r.key !== key));
   } else {
     // Server se rabta nahi hua: is device ke local record se check karo (offline / lab mode)
@@ -165,9 +173,29 @@ function scoreNow(){
 function remoteSave(rec, useBeacon){
   try {
     const payload = JSON.stringify({ action: "save", record: rec });
-    if(useBeacon && navigator.sendBeacon){ navigator.sendBeacon(CONFIG.API, new Blob([payload], { type: "application/json" })); return; }
-    fetch(CONFIG.API, { method: "POST", headers: { "Content-Type": "application/json" }, body: payload, keepalive: true }).catch(function(){});
-  } catch(e){}
+    if(useBeacon && navigator.sendBeacon){ navigator.sendBeacon(CONFIG.API, new Blob([payload], { type: "application/json" })); return null; }
+    return fetch(CONFIG.API, { method: "POST", headers: { "Content-Type": "application/json" }, body: payload, keepalive: true }).then(function(r){ return r.ok || r.status === 409; }).catch(function(){ return false; });
+  } catch(e){ return null; }
+}
+function markUploaded(key){
+  const all = getResults();
+  const rec = all.find(function(r){ return r.key === key; });
+  if(rec && !rec.uploaded){ rec.uploaded = true; saveResults(all); }
+}
+// Result server tak pohanchana pakka karo - fail ho to dobara koshish (net ka masla ho to record zaya na ho)
+function uploadWithRetry(rec, tries){
+  const p = remoteSave(rec, false);
+  if(!p) return;
+  p.then(function(ok){
+    if(ok){ markUploaded(rec.key); return; }
+    if(tries && tries.length){ const wait = tries.shift(); setTimeout(function(){ uploadWithRetry(rec, tries); }, wait); }
+  });
+}
+async function tryUpload(rec){
+  try {
+    const r = await fetch(CONFIG.API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "save", record: rec }) });
+    return r.ok || r.status === 409;
+  } catch(e){ return false; }
 }
 function persistResult(status, reason, useBeacon){
   const correct = scoreNow();
@@ -183,7 +211,7 @@ function persistResult(status, reason, useBeacon){
   };
   const all = getResults(); all.push(rec); saveResults(all);
   localStorage.removeItem(CONFIG.ACTIVE_KEY);
-  remoteSave(rec, useBeacon);
+  if(useBeacon){ remoteSave(rec, true); } else { uploadWithRetry(rec, [2000, 5000, 10000]); }
   return rec;
 }
 function cleanup(){
