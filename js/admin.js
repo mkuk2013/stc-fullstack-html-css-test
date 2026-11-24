@@ -2,6 +2,7 @@
 (function(){
 "use strict";
 const $ = id => document.getElementById(id);
+const COURSE_NAME = "Full Stack Web Development (6 Months)";
 function getResults(){ try { return JSON.parse(localStorage.getItem(CONFIG.RESULTS_KEY)) || []; } catch(e){ return []; } }
 function saveResults(r){ localStorage.setItem(CONFIG.RESULTS_KEY, JSON.stringify(r)); }
 function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
@@ -98,7 +99,6 @@ $("test-toggle") && $("test-toggle").addEventListener("change", async function()
     alert("Status change failed. Please check the internet connection and try again.");
   }
 });
-const COURSE_NAME = "Full Stack Web Development (6 Months)";
 // Combined official result: sirf nayi test (total 50) par - MCQ + Practical = Total /100
 function combined(r){
   if(r.total!==50) return null;
