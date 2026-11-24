@@ -101,13 +101,13 @@ $("test-toggle") && $("test-toggle").addEventListener("change", async function()
 const COURSE_NAME = "Full Stack Web Development (6 Months)";
 // Combined official result: sirf nayi test (total 50) par - MCQ + Practical = Total /100
 function combined(r){
-  if(r.status!=="Completed" || r.total!==50) return null;
+  if(r.total!==50) return null;
   if(typeof r.practical !== "number") return { pending:true };
   const total = r.score + r.practical;
   return { pending:false, total:total, pct:total };
 }
 function sortKey(r){ const c = combined(r); return c ? (c.pending ? r.percent : c.total) : r.percent; }
-function isPass(r){ const c = combined(r); if(c) return !c.pending && c.total >= CONFIG.PASS_PERCENT; return r.status==="Completed" && r.percent >= CONFIG.PASS_PERCENT; }
+function isPass(r){ if(r.status!=="Completed") return false; const c = combined(r); if(c) return !c.pending && c.total >= CONFIG.PASS_PERCENT; return r.percent >= CONFIG.PASS_PERCENT; }
 function gradeOfPct(p){
   if(p>=80) return {g:"A+", cls:"ga"};
   if(p>=70) return {g:"A", cls:"ga"};
@@ -117,16 +117,10 @@ function gradeOfPct(p){
   return {g:"F", cls:"gf"};
 }
 function gradeOf(r){
-  if(r.status!=="Completed") return {g:"—", cls:"gx"};
   const c = combined(r);
   if(c) return c.pending ? {g:"—", cls:"gx"} : gradeOfPct(c.pct);
-  const p = r.percent;
-  if(p>=80) return {g:"A+", cls:"ga"};
-  if(p>=70) return {g:"A", cls:"ga"};
-  if(p>=60) return {g:"B", cls:"gb"};
-  if(p>=50) return {g:"C", cls:"gc"};
-  if(p>=40) return {g:"D", cls:"gd"};
-  return {g:"F", cls:"gf"};
+  if(r.status!=="Completed") return {g:"—", cls:"gx"};
+  return gradeOfPct(r.percent);
 }
 function sectionLabel(r){
   if(r.sectionName) return r.sectionName;
@@ -175,8 +169,8 @@ function render(){
     const tr = document.createElement("tr");
     const pass = isPass(r);
     const c = combined(r);
-    const pracPrint = (r.total!==50 || r.status!=="Completed") ? "—" : (typeof r.practical==="number" ? String(r.practical) : "Pending");
-    const pracCell = (r.total!==50 || r.status!=="Completed")
+    const pracPrint = r.total!==50 ? "—" : (typeof r.practical==="number" ? String(r.practical) : "Pending");
+    const pracCell = r.total!==50
       ? "<td>—</td>"
       : "<td><span class='print-only'>"+pracPrint+"</span><span class='no-print prac-wrap'><input class='prac-input' type='number' min='0' max='50' placeholder='0-50' value='"+(typeof r.practical==="number" ? r.practical : "")+"'><button class='btn small' data-act='prac' data-i='"+i+"' title='Practical marks save karein (0-50)'>Save</button></span></td>";
     tr.innerHTML =
