@@ -94,6 +94,21 @@ export default async (req) => {
         await store.setJSON(enc(body.key), rec);
         return json({ ok: true, practical: rec.practical === undefined ? null : rec.practical });
       }
+      if (act === "set-score") {
+        if (body.pw !== adminPw()) return json({ error: "unauthorized" }, 401);
+        if (!body.key) return json({ error: "no key" }, 400);
+        const rec = await store.get(enc(body.key), { type: "json" }).catch(() => null);
+        if (!rec) return json({ error: "not found" }, 404);
+        const sc = Number(body.score);
+        const tot = rec.total || 50;
+        if (isNaN(sc) || sc < 0 || sc > tot) return json({ error: "score must be 0-" + tot }, 400);
+        rec.score = sc;
+        rec.correct = sc;
+        rec.percent = Math.round(sc / tot * 100);
+        if (typeof rec.answered === "number") rec.wrong = Math.max(0, rec.answered - sc);
+        await store.setJSON(enc(body.key), rec);
+        return json({ ok: true, score: sc, percent: rec.percent });
+      }
       if (act === "set-record-status") {
         if (body.pw !== adminPw()) return json({ error: "unauthorized" }, 401);
         if (!body.key) return json({ error: "no key" }, 400);

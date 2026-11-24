@@ -177,7 +177,7 @@ function render(){
       "<td>"+(i+1)+"</td><td><b>"+esc(r.name)+"</b></td>"+
       "<td>"+esc(sectionLabel(r))+"</td>"+
       "<td style='font-size:12px'>"+COURSE_NAME+"</td>"+
-      "<td><b>"+r.score+"</b> / "+r.total+"</td>"+
+      "<td><span class='print-only'><b>"+r.score+"</b> / "+r.total+"</span><span class='no-print prac-wrap'><input class='prac-input' type='number' min='0' max='"+r.total+"' value='"+r.score+"' style='width:52px' title='MCQ marks - galat hon to theek karke Save dabayein'><button class='btn small' data-act='score' data-i='"+i+"' title='MCQ marks save karein'>Save</button></span></td>"+
       pracCell+
       "<td>"+(c ? (c.pending ? "—" : "<b>"+c.total+"</b> / 100") : "<b>"+r.score+"</b> / "+r.total)+"</td>"+
       "<td><b>"+(c ? (c.pending ? "—" : c.pct+"%") : r.percent+"%")+"</b></td>"+
@@ -197,6 +197,7 @@ function render(){
       const r = currentList[Number(b.dataset.i)];
       if(b.dataset.act==="del") delRecord(r);
       if(b.dataset.act==="pend") setRecordStatus(r, "Pending", b);
+      if(b.dataset.act==="score"){ const inp2 = b.parentElement.querySelector("input"); saveScore(r, inp2, b); }
       if(b.dataset.act==="prac"){ const inp = b.parentElement.querySelector("input"); savePractical(r, inp, b); }
     });
   });
@@ -224,6 +225,28 @@ async function savePractical(r, inp, btn){
     render();
   } catch(e) {
     alert("Practical marks save nahi ho sake. Internet check karke dobara koshish karein.");
+    btn.disabled = false; btn.textContent = old;
+  }
+}
+
+// MCQ marks manually theek karo (masalan record mein 0 aya ho lekin asal marks aur hon)
+async function saveScore(r, inp, btn){
+  const v = (inp && inp.value || "").trim();
+  const sc = Number(v);
+  if(v === "" || isNaN(sc) || sc < 0 || sc > r.total){ alert("MCQ marks 0 se " + r.total + " ke darmiyan hone chahiye."); return; }
+  if(sc === r.score) return;
+  if(!confirm("'" + r.name + "' ke MCQ marks " + r.score + " se " + sc + " kar dein?\nPercentage aur combined result khud update ho jayega.")) return;
+  btn.disabled = true; const old = btn.textContent; btn.textContent = "Saving...";
+  try {
+    const res = await fetch(CONFIG.API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "set-score", key: r.key, score: sc, pw: adminPw() }) });
+    const data = await res.json().catch(() => ({}));
+    if(!res.ok || !data.ok) throw new Error(data.error || res.status);
+    const apply = function(x){ if(x.key === r.key){ x.score = sc; x.correct = sc; x.percent = Math.round(sc / (x.total || 50) * 100); if(typeof x.answered === "number") x.wrong = Math.max(0, x.answered - sc); } };
+    const local = getResults(); local.forEach(apply); saveResults(local);
+    if(remoteCache) remoteCache.forEach(apply);
+    render();
+  } catch(e) {
+    alert("MCQ marks save nahi ho sake. Internet check karke dobara koshish karein.");
     btn.disabled = false; btn.textContent = old;
   }
 }
