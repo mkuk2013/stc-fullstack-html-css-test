@@ -84,6 +84,17 @@ export default async (req) => {
         await store.setJSON(enc(body.key), rec);
         return json({ ok: true, practical: rec.practical === undefined ? null : rec.practical });
       }
+      if (act === "set-record-status") {
+        if (body.pw !== adminPw()) return json({ error: "unauthorized" }, 401);
+        if (!body.key) return json({ error: "no key" }, 400);
+        const allowed = ["Pending", "Cancelled", "Completed"];
+        if (!allowed.includes(body.status)) return json({ error: "bad status" }, 400);
+        const rec = await store.get(enc(body.key), { type: "json" }).catch(() => null);
+        if (!rec) return json({ error: "not found" }, 404);
+        rec.status = body.status;
+        await store.setJSON(enc(body.key), rec);
+        return json({ ok: true, status: rec.status });
+      }
       if (act === "delete") {
         if (body.pw !== adminPw()) return json({ error: "unauthorized" }, 401);
         if (body.key) await store.delete(enc(body.key));

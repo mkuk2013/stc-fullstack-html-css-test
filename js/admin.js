@@ -107,7 +107,7 @@ function combined(r){
   return { pending:false, total:total, pct:total };
 }
 function sortKey(r){ const c = combined(r); return c ? (c.pending ? r.percent : c.total) : r.percent; }
-function isPass(r){ if(r.status!=="Completed") return false; const c = combined(r); if(c) return !c.pending && c.total >= CONFIG.PASS_PERCENT; return r.percent >= CONFIG.PASS_PERCENT; }
+function isPass(r){ if(r.status==="Cancelled") return false; const c = combined(r); if(c) return !c.pending && c.total >= CONFIG.PASS_PERCENT; return r.status==="Completed" && r.percent >= CONFIG.PASS_PERCENT; }
 function gradeOfPct(p){
   if(p>=80) return {g:"A+", cls:"ga"};
   if(p>=70) return {g:"A", cls:"ga"};
@@ -133,7 +133,7 @@ function positionMap(all){
   // Merit positions are calculated separately within each section
   const map = {};
   const groups = {};
-  all.filter(r=>r.status==="Completed").forEach(function(r){ const g = r.section || "legacy"; (groups[g] = groups[g] || []).push(r); });
+  all.filter(r=>r.status==="Completed" || r.status==="Pending").forEach(function(r){ const g = r.section || "legacy"; (groups[g] = groups[g] || []).push(r); });
   Object.keys(groups).forEach(function(g){
     const done = groups[g].slice().sort((a,b)=>sortKey(b)-sortKey(a));
     let lastScore=null, lastRank=0;
@@ -184,9 +184,10 @@ function render(){
       (function(){ const gr=gradeOf(r); return "<td><span class='grade "+gr.cls+"'>"+gr.g+"</span></td>"; })()+
       (function(){ const p=posMap[r.key+"|"+r.date]; return "<td class='print-hide'>"+(p? "<span class='pos "+(p===1?"p1":p===2?"p2":p===3?"p3":"")+"'>"+p+"</span>" : "—")+"</td>"; })()+
       "<td>"+(r.status==="Cancelled" ? "<span style='color:var(--red);font-weight:800'>CANCELLED</span>" : (c && c.pending ? "<span style='color:#b45309;font-weight:800'>PENDING</span>" : (pass ? "<span style='color:var(--green);font-weight:800'>PASS</span>" : "<span style='color:var(--red);font-weight:800'>FAIL</span>")))+"</td>"+
-      "<td class='print-hide'><span class='badge "+(r.status==="Completed"?"ok":"cancel")+"'>"+esc(r.status)+"</span>"+(r.reason && r.status==="Cancelled" ? "<div style='font-size:11px;color:var(--muted);max-width:170px'>"+esc(r.reason)+"</div>" : "")+"</td>"+
+      "<td class='print-hide'><span class='badge "+(r.status==="Completed"?"ok":r.status==="Pending"?"pend":"cancel")+"'>"+esc(r.status)+"</span>"+(r.reason && r.status==="Cancelled" ? "<div style='font-size:11px;color:var(--muted);max-width:170px'>"+esc(r.reason)+"</div>" : "")+"</td>"+
       "<td class='print-hide'>"+r.answered+"</td><td class='print-hide'>"+esc(r.timeUsed||"-")+"</td><td class='print-hide' style='white-space:nowrap'>"+esc(r.date)+"</td>"+
       "<td class='no-print' style='white-space:nowrap'>"+
+        (r.status==="Cancelled" ? "<button class='btn small' data-act='pend' data-i='"+i+"' title='Status Cancelled se Pending kar dein - phir practical marks lag sakenge' style='background:linear-gradient(180deg,#f59e0b,#d97706);margin-right:5px'>⏳ Pending Karo</button>" : "")+
         "<button class='btn small red' data-act='del' data-i='"+i+"' title='Delete - the student can then retake the test'>🗑 Delete</button>"+
       "</td>";
     tb.appendChild(tr);
@@ -195,6 +196,7 @@ function render(){
     b.addEventListener("click", function(){
       const r = currentList[Number(b.dataset.i)];
       if(b.dataset.act==="del") delRecord(r);
+      if(b.dataset.act==="pend") setRecordStatus(r, "Pending", b);
       if(b.dataset.act==="prac"){ const inp = b.parentElement.querySelector("input"); savePractical(r, inp, b); }
     });
   });
@@ -222,6 +224,24 @@ async function savePractical(r, inp, btn){
     render();
   } catch(e) {
     alert("Practical marks save nahi ho sake. Internet check karke dobara koshish karein.");
+    btn.disabled = false; btn.textContent = old;
+  }
+}
+
+// Record ka status badlo (masalan Cancelled -> Pending) - central DB mein save hota hai
+async function setRecordStatus(r, status, btn){
+  if(!confirm("'" + r.name + "' ka status " + r.status + " se " + status + " kar dein?")) return;
+  btn.disabled = true; const old = btn.textContent; btn.textContent = "Saving...";
+  try {
+    const res = await fetch(CONFIG.API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "set-record-status", key: r.key, status: status, pw: adminPw() }) });
+    const data = await res.json().catch(() => ({}));
+    if(!res.ok || !data.ok) throw new Error(data.error || res.status);
+    const apply = function(x){ if(x.key === r.key) x.status = status; };
+    const local = getResults(); local.forEach(apply); saveResults(local);
+    if(remoteCache) remoteCache.forEach(apply);
+    render();
+  } catch(e) {
+    alert("Status change nahi ho saka. Internet check karke dobara koshish karein.");
     btn.disabled = false; btn.textContent = old;
   }
 }
