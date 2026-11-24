@@ -270,6 +270,17 @@ tr:hover td{background:#eef5fd}
 .print-only{display:none}
 .prac-wrap{display:flex;gap:5px;align-items:center}
 .prac-input{width:58px;padding:5px 7px;border:1.5px solid var(--border,#dbe4ef);border-radius:7px;font-size:13px}
+/* toppers */
+.topper-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-top:16px}
+.topper-card{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:16px 18px;box-shadow:0 6px 18px rgba(10,37,64,.06)}
+.topper-card h3{margin:0 0 10px;color:var(--navy);font-size:15.5px}
+.topper-hero{border:1.6px solid var(--gold,#f59e0b);background:linear-gradient(180deg,#fffbeb,#fff)}
+.trow{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px dashed #e8eef5}
+.trow:last-child{border-bottom:none}
+.trow .tname{flex:1;font-weight:600;text-align:left}
+.trow .tmarks{font-weight:800;color:var(--navy);white-space:nowrap}
+.print-toppers{margin-top:18px;border:1.6px solid var(--navy);border-radius:10px;padding:12px 16px;text-align:left}
+.print-toppers h3{margin:0 0 8px;color:var(--navy);font-size:15px}
 /* print */
 @media print{
   .print-only{display:inline!important}

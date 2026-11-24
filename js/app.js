@@ -27,6 +27,24 @@ fetch(CONFIG.API + "?action=status").then(function(r){ return r.ok ? r.json() : 
   if(d && typeof d.open === "boolean"){ testOpen = d.open; applyTestOpenUI(); }
 }).catch(function(){});
 
+// ---------- Toppers (public list, server se) ----------
+(function(){
+  function rankBadge(i){ return "<span class='pos " + (i===0 ? "p1" : i===1 ? "p2" : i===2 ? "p3" : "") + "'>" + (i+1) + "</span>"; }
+  function rowHtml(t, i){
+    const marks = (t.total !== null && t.total !== undefined) ? (t.total + " / 100 · " + t.pct + "%") : (t.mcq + " / 50 · " + t.pct + "%");
+    return "<div class='trow'>" + rankBadge(i) + "<span class='tname'>" + escHtml(t.name) + "</span><span class='tmarks'>" + marks + "</span></div>";
+  }
+  function fill(id, list){ const el = document.getElementById(id); if(el) el.innerHTML = (list && list.length) ? list.map(rowHtml).join("") : "<div style='color:var(--muted);font-size:13px'>No results yet</div>"; }
+  fetch(CONFIG.API + "?action=toppers").then(function(r){ return r.ok ? r.json() : null; }).then(function(d){
+    if(!d || !d.overall || !d.overall.length) return;
+    fill("toppers-overall", d.overall);
+    fill("toppers-basic", d.sections && d.sections.basic);
+    fill("toppers-htmlcss", d.sections && d.sections.htmlcss);
+    fill("toppers-advanced", d.sections && d.sections.advanced);
+    const sec = document.getElementById("toppers"); if(sec) sec.classList.remove("hidden");
+  }).catch(function(){});
+})();
+
 // ---------- Entry ----------
 function sectionOf(id){ return CONFIG.SECTIONS.find(function(x){ return x.id === id; }) || CONFIG.SECTIONS[0]; }
 $("entry-form").addEventListener("submit", async function(e){

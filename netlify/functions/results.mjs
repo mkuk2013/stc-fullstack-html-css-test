@@ -48,6 +48,30 @@ export default async (req) => {
         record: rec ? { name: rec.name, status: rec.status, score: rec.score, total: rec.total, date: rec.date } : null
       });
     }
+    if (req.method === "GET" && action === "toppers") {
+      // Public: sirf naam, section aur marks (koi private data nahi) - website ke Toppers section ke liye
+      const { blobs } = await store.list();
+      const pubs = [];
+      for (const b of blobs) {
+        if (b.key === "__settings__" || b.key === "__tombstones__") continue;
+        const r = await store.get(b.key, { type: "json" }).catch(() => null);
+        if (r && r.section && r.total === 50 && (r.status === "Completed" || r.status === "Pending")) {
+          const hasP = typeof r.practical === "number";
+          const total = hasP ? r.score + r.practical : null;
+          pubs.push({ name: r.name, section: r.section, mcq: r.score, practical: hasP ? r.practical : null, total: total, pct: hasP ? total : r.percent });
+        }
+      }
+      const byRank = (a, b) => (b.pct - a.pct) || (b.mcq - a.mcq);
+      const top = (list, n) => list.slice().sort(byRank).slice(0, n);
+      return json({
+        overall: top(pubs, 5),
+        sections: {
+          basic: top(pubs.filter(p => p.section === "basic"), 5),
+          htmlcss: top(pubs.filter(p => p.section === "htmlcss"), 5),
+          advanced: top(pubs.filter(p => p.section === "advanced"), 5)
+        }
+      });
+    }
     if (req.method === "GET" && action === "list") {
       if ((url.searchParams.get("pw") || "") !== adminPw()) return json({ error: "unauthorized" }, 401);
       const { blobs } = await store.list();

@@ -201,6 +201,33 @@ function render(){
       if(b.dataset.act==="prac"){ const inp = b.parentElement.querySelector("input"); savePractical(r, inp, b); }
     });
   });
+  // ----- Toppers block (result sheet par print hota hai, screen par bhi dikhta hai) -----
+  (function(){
+    const el = $("print-toppers"); if(!el) return;
+    const done = scoped.filter(r => r.status === "Completed" || r.status === "Pending");
+    function rankList(list, n){
+      const sorted = list.slice().sort((a, b) => (sortKey(b) - sortKey(a)) || (b.score - a.score)).slice(0, n);
+      let lastKey = null, lastRank = 0;
+      return sorted.map(function(r, i){
+        const sk = sortKey(r); if(sk !== lastKey){ lastRank = i + 1; lastKey = sk; }
+        const c = combined(r);
+        const marks = (c && !c.pending) ? (c.total + " / 100 · " + c.pct + "%") : (r.score + " / 50 · " + r.percent + "%" + (c && c.pending ? " · Practical Pending" : ""));
+        return "<div class='trow'><span class='pos " + (lastRank===1 ? "p1" : lastRank===2 ? "p2" : lastRank===3 ? "p3" : "") + "'>" + lastRank + "</span><span class='tname'>" + esc(r.name) + "</span><span class='tmarks'>" + marks + "</span></div>";
+      }).join("");
+    }
+    let html = "";
+    if(fs){
+      if(fs !== "legacy" && done.length) html = "<h3>🏆 Toppers — " + esc(sectionLabel(done[0])) + "</h3>" + rankList(done, 5);
+    } else if(done.length){
+      html = "<h3>🏆 Overall Toppers — Top 5</h3>" + rankList(done, 5);
+      ["basic", "htmlcss", "advanced"].forEach(function(sid){
+        const g = done.filter(r => r.section === sid);
+        if(g.length) html += "<h3 style='margin-top:12px'>🏆 " + esc(sectionLabel(g[0])) + " — Top 3</h3>" + rankList(g, 3);
+      });
+    }
+    el.innerHTML = html;
+    el.style.display = html ? "" : "none";
+  })();
 }
 $("search").addEventListener("input", render);
 $("filter-status").addEventListener("change", render);
